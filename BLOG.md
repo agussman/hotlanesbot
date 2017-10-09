@@ -135,9 +135,22 @@ You'll also get this  message if one of your imports is missing:
   "errorMessage": "Unable to import module 'lambda_function'"
 }
 ```
- 
- 
 
+So, after some trial an error, it's clear our dumb thing is failing because it's missing the `requests` library.
+
+Instructions on creating a deploymnent package:
+http://docs.aws.amazon.com/lambda/latest/dg/lambda-python-how-to-create-deployment-package.html
+
+Which even include `requests` in the example (telling).
+
+Because I'm on a mac and not using a virtualenv, I need to create a `setup.cfg` in the deployment directory:
+```
+[install]
+prefix= 
+```
+ 
+And then installed it with:
+`$ pip install requests -t $PWD`
 
 Notes on scheduling the timing of the Lambda function:
 http://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-create-function.html

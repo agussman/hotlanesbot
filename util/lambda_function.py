@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import requests
 import json
 import datetime
@@ -191,7 +188,7 @@ URL = "https://www.expresslanes.com/on-the-road-api"
 dynamodb = boto3.resource(service_name='dynamodb', region_name='es-east-1')
 table = dynamodb.Table('Rates')
 
-def lambda_handler():
+def lambda_handler(event, context):
 
     # DynamoDB wants timestamps as Strings (we're dropping the milliseconds)
     dt = datetime.datetime.now().isoformat(' ').split(".")[0]
