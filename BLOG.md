@@ -35,5 +35,24 @@ Awesome, we can query multiple `ods` prices at a time:
 https://www.expresslanes.com/on-the-road-api?ods[]=1038&ods[]=1044&ods[]=1195
 
 Let's grab all the `ods` values with `jq` for style points:
-$ cat data/entry_exit.json | jq '.[] | .[] | .[] | .exits | .[] | .ods | .[]'
+`$ cat data/entry_exit.json | jq '.[] | .[] | .[] | .exits | .[] | .ods | .[]'`
+
+I have some suspicions if that's actually working, because the count doesn't really match this grep:
+```
+$ cat data/entry_exit.json | jq '.[] | .[] | .[] | .exits | .[] | .ods | .[]' | wc -l
+jq: error (at <stdin>:3383): Cannot iterate over null (null)
+     264
+$ cat data/entry_exit.json | grep ods | wc -l
+     348
+```
+
+Time for a quick ~python script~ grep hack:
+```
+$ cat data/entry_exit.json | grep -A 3 ods | grep -o -E '\d{4}' | sort -n | uniq > data/ods.txt
+$ wc -l data/ods.txt
+     174 data/ods.txt
+```
+     
+Kickstart that into a python scrip to perform the query:
+`$ for i in `cat data/ods.txt`; do echo \"$i\",; done > util/query_ods.py`
 
