@@ -3,6 +3,7 @@
 
 import requests
 import json
+import datetime
 
 import pprint
 
@@ -188,17 +189,22 @@ URL = "https://www.expresslanes.com/on-the-road-api"
 
 def main():
 
-    # Generate the paremeters
-    #params = [ "ods[]=%s" % i for i in ODS[:3] ]
-    #print params
+    # DynamoDB wants timestamps as Strings (we're dropping the milliseconds)
+    dt = datetime.datetime.now().isoformat(' ').split(".")[0]
 
-    payload = { "ods[]": ODS[:3]}
+    print dt
+
+    payload = {"ods[]": ODS}
 
     resp = requests.get(url=URL, params=payload)
     print "%s %s" % (resp.status_code, resp.url)
     data = json.loads(resp.content)
 
-    pprint.pprint(data)
+    #pprint.pprint(data)
+
+    for rate in data['rates']:
+        rate[u'dt'] = dt
+        pprint.pprint(rate)
 
 if __name__ == "__main__":
     main()
