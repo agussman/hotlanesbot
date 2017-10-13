@@ -185,15 +185,21 @@ ODS = [
 
 URL = "https://www.expresslanes.com/on-the-road-api"
 
-dynamodb = boto3.resource(service_name='dynamodb', region_name='es-east-1')
-table = dynamodb.Table('Rates')
-
 def lambda_handler(event, context):
+
+    #s3 = boto3.resource('s3')
+    #for bucket in s3.buckets.all():
+    #    print(bucket.name)
+
+    ddb = boto3.resource(service_name='dynamodb')
+    table = ddb.Table("Rates")
+
+    #print table.item_count
 
     # DynamoDB wants timestamps as Strings (we're dropping the milliseconds)
     dt = datetime.datetime.now().isoformat(' ').split(".")[0]
 
-    print dt
+    #print dt
 
     payload = {"ods[]": ODS}
 
@@ -201,16 +207,20 @@ def lambda_handler(event, context):
     print "%s %s %s" % (dt, resp.status_code, resp.url)
     data = json.loads(resp.content)
 
+    print "Got response:"
     #pprint.pprint(data)
 
     for rate in data['rates']:
         rate[u'dt'] = dt
-        #pprint.pprint(rate)
+        pprint.pprint(rate)
 
-        send_to_dynamo(rate)
+        send_to_dynamo(rate, table)
 
-def send_to_dynamo(rate):
+def send_to_dynamo(rate, table):
+    #print "..."
     response = table.put_item(Item=rate)
+    print(response)
+
 
 if __name__ == "__main__":
-    lambda_handler()
+    lambda_handler({}, {})

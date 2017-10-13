@@ -114,6 +114,34 @@ Using the existing AmazonDynamoDBFullAccess policy (TODO: restrict to just the T
 Role name: LambdaToDynamo
 Write data to DynamoDb
 
+# Configure AWS CLI locally
+
+If you've never done this before, it should be pretty straight forward (link to docs).
+
+For me this was a little wonky because I have different AWS credentials for work and personal use. In switching,
+I ran both `$ aws configure` and edited `~/.aws/credentials`, but the changes didn't seem to take right away.
+
+To confirm your environment is setup correctly, run:
+
+```
+$ aws iam get-user
+```
+
+and:
+
+```
+$ ipython
+In [1]: import boto3
+
+In [2]: ddb = boto3.resource("dynamodb")
+
+In [3]: table = ddb.Table("Rates")
+
+In [4]: table.item_count
+Out[4]: 0
+```
+
+
 # Create the Lambda function
 
 Create from canary
@@ -122,14 +150,25 @@ Existing Role > LambdaToDynamo
 
 lambda_function.lambda_handler
 
-
+Useful reference on the DynamoDB `put_item` call:
+http://boto3.readthedocs.io/en/latest/reference/services/dynamodb.html#DynamoDB.Client.put_item
 
 Upload to an S3 bucket:
 Way more of a PITA than it should be.
-You have to create a .zip and the .py needs to be in the base of the zip
-The lambda handler needs to be set to <filebasename>.<function>
-If it doesn't show you the content then it can't find the function.
+
+You have to create a .zip and the .py needs to be in the base of the zip:
+
+```
+util $ zip -r ../app.zip *
+```
+
+The lambda handler needs to be set to `<filebasename>.<function>`. In our case that's `lambda_function.lambda_handler`.
+
+
+If it doesn't show you the Python content then it can't find the function. There could be a typo in the lambda handler, 
+a structural issue in the zip, or really anything. It is finicky and incomprehensible.
 You'll also get this  message if one of your imports is missing:
+
  ```
  {
   "errorMessage": "Unable to import module 'lambda_function'"
@@ -143,7 +182,7 @@ http://docs.aws.amazon.com/lambda/latest/dg/lambda-python-how-to-create-deployme
 
 Which even include `requests` in the example (telling).
 
-Because I'm on a mac and not using a virtualenv, I need to create a `setup.cfg` in the deployment directory:
+Because I'm on a Mac and not using a virtualenv, I need to create a `setup.cfg` in the deployment directory:
 ```
 [install]
 prefix= 
@@ -151,6 +190,18 @@ prefix=
  
 And then installed it with:
 `$ pip install requests -t $PWD`
+
+# Test it
+Configure test events
+Create new test event
+Event template: Scheduled Event
+Give it a name: TestScheduledEvent
+Click Test
+
+A couple of notes to be aware of:
+ * This is actually going to run the code, which means it will insert data into the database (or do anything else which might cost you $$$)
+ * Timezones are a thing! Running the code locally (EST) will give you a different time than on lambda (UTC)
+
 
 Notes on scheduling the timing of the Lambda function:
 http://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-create-function.html
