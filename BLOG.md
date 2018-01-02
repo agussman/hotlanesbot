@@ -127,7 +127,7 @@ To confirm your environment is setup correctly, run:
 $ aws iam get-user
 ```
 
-and:
+and (from the 'util' dir):
 
 ```
 $ ipython
@@ -191,7 +191,7 @@ prefix=
 And then installed it with:
 `$ pip install requests -t $PWD`
 
-# Test it
+# Testing
 Configure test events
 Create new test event
 Event template: Scheduled Event
@@ -199,17 +199,56 @@ Give it a name: TestScheduledEvent
 Click Test
 
 A couple of notes to be aware of:
- * This is actually going to run the code, which means it will insert data into the database (or do anything else which might cost you $$$)
+ * This test is actually going to run the code, which means it will insert data into the database (or do anything else which might cost you $$$)
  * Timezones are a thing! Running the code locally (EST) will give you a different time than on lambda (UTC)
+
+# Scheduling
+
+Next to "Configuration" above where it's (not) showing your code, click on "Triggers".
+Add trigger > Cloudwatch Events
+Rule description: Run every 5 minutes
+Schedule expression `rate(5 minutes)`
+
+To view the rule, go to CloudWatch > Events > Rules
+
+After doing this, if you're wondering why it looks like your Lambda function isn't running, it might be because it's Disabled.
+This can be confusing, because the Trigger will list Rule state: Enabled, but the button will say "Disabled".
+<insert image>
 
 
 Notes on scheduling the timing of the Lambda function:
 http://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-create-function.html
+http://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html
 
+NOTE: Rate cannot be < 1 minute. (Don't worry, you can always add a `while DDOS == True` and you'll be set)
 
+Lambda Best Practices:
+http://docs.aws.amazon.com/lambda/latest/dg/best-practices.html
+"To have full control of the dependencies your function uses, we recommend packaging all your dependencies with your deployment package."
 
 
 https://aws.amazon.com/dynamodb/iot/
+
+
+# Querying the data
+
+Going to use Amazon API Gateway to get it back out
+Helpful tutorial here: https://aws.amazon.com/blogs/compute/using-amazon-api-gateway-as-a-proxy-for-dynamodb/
+
+API Gateway > Create API > 
+API name
+Description
+
+Create Resource
+
+BEFORE THE API GATEWAY
+probably need an IAM read user?
+Also, what's my query? Figure that out first. I think Querying everything within the last 5 minutes would do it? SHould only be one run
+There doesn't seem to be an easy way to say "WHERE TIMESTAMP=MAX(TIMESTAMP)"
+
+
+
+
 
 ElasticCache - in-memory data store
 * Redis
