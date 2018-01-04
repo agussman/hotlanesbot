@@ -275,6 +275,17 @@ In the response, the relevant portion is:
 <span id="spanTollAmt" class="data-txt">$7.75</span>
 ```
 
+This is an ASP.net page and maintaining VIEWSTATE, cookies, etc is beyond the ken of requests. We're going to switch to `scrapy`.
+Good reference: https://blog.scrapinghub.com/2016/04/20/scrapy-tips-from-the-pros-april-2016-edition/
+
+`$ pip install scrapy`
+
+Using 1.5.0 for this.
+
+`$ scrapy startproject vai66tolls`
+
+
+
 
 
 
