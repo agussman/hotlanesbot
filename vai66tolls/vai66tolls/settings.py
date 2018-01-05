@@ -56,6 +56,17 @@ ROBOTSTXT_OBEY = True
 #    'vai66tolls.middlewares.Vai66TollsDownloaderMiddleware': 543,
 #}
 
+USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0'
+
+# see https://stackoverflow.com/questions/41942879/scrapy-missing-cookies-in-response
+# https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
+COOKIES_ENABLED = True
+COOKIES_DEBUG = True
+
+DOWNLOADER_MIDDLEWARES = {
+  'scrapy.downloadermiddlewares.cookies.CookiesMiddleware': 700
+}
+
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
 #EXTENSIONS = {

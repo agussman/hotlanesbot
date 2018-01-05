@@ -4,3 +4,4 @@ certs/*
 accessKeys.csv
 util/*
 app.zip
+*.pyc

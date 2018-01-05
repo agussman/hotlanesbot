@@ -284,6 +284,18 @@ Using 1.5.0 for this.
 
 `$ scrapy startproject vai66tolls`
 
+Need to enable Cookies in settings.py:
+
+```
+# see https://stackoverflow.com/questions/41942879/scrapy-missing-cookies-in-response
+# https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
+COOKIES_ENABLED = True
+COOKIES_DEBUG = True
+
+DOWNLOADER_MIDDLEWARES = {
+  'scrapy.downloadermiddlewares.cookies.CookiesMiddleware': 700
+}
+```
 
 
 
