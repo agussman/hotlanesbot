@@ -78,6 +78,13 @@ class Vai66TollsDownloaderMiddleware(object):
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
+        print "Custom Middlewear Request"
+        print "HEADERS"
+        print request.headers
+        print "COOKIE"
+        print request.cookies
+        print "BODY"
+        print "\n\n".join(request.body.split('&'))
         return None
 
     def process_response(self, request, response, spider):
