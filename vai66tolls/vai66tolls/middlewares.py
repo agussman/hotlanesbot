@@ -7,6 +7,8 @@
 
 from scrapy import signals
 
+from scrapy.downloadermiddlewares.cookies import CookiesMiddleware
+
 
 class Vai66TollsSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
@@ -54,6 +56,29 @@ class Vai66TollsSpiderMiddleware(object):
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+class BrownieMiddleware(CookiesMiddleware):
+
+
+
+    def process_request(self, request, spider):
+        print "RUNNING BROWNIE MIDDLEWARE"
+        if request.meta.get('dont_merge_cookies', False):
+            return
+
+        cookiejarkey = request.meta.get("cookiejar")
+        print "JAR KEY: %s" % cookiejarkey
+        jar = self.jars[cookiejarkey]
+        cookies = self._get_request_cookies(jar, request)
+        for cookie in cookies:
+            print "THERE WAS A COOKIE"
+            jar.set_cookie_if_ok(cookie, request)
+
+        # set Cookie header
+        request.headers.pop('Cookie', None)
+        jar.add_cookie_header(request)
+        self._debug_cookie(request, spider)
+
 
 
 class Vai66TollsDownloaderMiddleware(object):

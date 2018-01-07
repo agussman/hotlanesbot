@@ -1,6 +1,9 @@
 import scrapy
 import logging
 
+from scrapy.http.cookies import CookieJar
+from scrapy.utils.python import to_native_str
+
 LOG_LEVEL = logging.debug
 
 class VAI66TollsViewStateSpider(scrapy.Spider):
@@ -15,10 +18,18 @@ class VAI66TollsViewStateSpider(scrapy.Spider):
         self.log('Saved file %s' % filename)
 
         self.log('Other thing?')
+
+        print "DOES THIS SHOW ANYTHING?"
+        print response.headers
+        cl = [to_native_str(c, errors='replace')
+                  for c in response.headers.getlist('Set-Cookie')]
+        print cl
+        print "DID IT?"
         # Parse Eastbound
-#        r = scrapy.FormRequest.from_response(
-#            response,
-        r = scrapy.FormRequest(
+        r = scrapy.FormRequest.from_response(
+            response,
+#        r = scrapy.FormRequest(
+#            'https://vai66tolls.com/',
             headers={
                 #"Host": "vai66tolls.com",
                 #User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:52.0) Gecko/20100101 Firefox/52.0
@@ -45,6 +56,7 @@ class VAI66TollsViewStateSpider(scrapy.Spider):
                 },
             callback=self.parse_eb,
             #dont_click = True
+            meta={'cookiejar': "va"}
         )
 
         print "HEADERS"
@@ -53,6 +65,15 @@ class VAI66TollsViewStateSpider(scrapy.Spider):
         print r.cookies
         print "BODY"
         print "\n\n".join(r.body.split('&'))
+
+        # Just gonna paste in code from the cookies middleware
+        jars = defaultdict(CookieJar)
+        jar = jars["x"]
+
+        #cookiejarkey = request.meta.get("cookiejar")
+        #jar = self.jars[cookiejarkey]
+        #jar.extract_cookies(response, request)
+
 
         yield r
 

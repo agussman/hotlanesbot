@@ -64,7 +64,8 @@ COOKIES_ENABLED = True
 COOKIES_DEBUG = True
 
 DOWNLOADER_MIDDLEWARES = {
-  'scrapy.downloadermiddlewares.cookies.CookiesMiddleware': 700,
+  #'scrapy.downloadermiddlewares.cookies.CookiesMiddleware': 700,
+  'vai66tolls.middlewares.BrownieMiddleware': 700,
   'vai66tolls.middlewares.Vai66TollsDownloaderMiddleware': 999,
 }
 
