@@ -1,6 +1,8 @@
 import scrapy
 import logging
 
+from collections import defaultdict
+
 from scrapy.http.cookies import CookieJar
 from scrapy.utils.python import to_native_str
 
@@ -72,7 +74,9 @@ class VAI66TollsViewStateSpider(scrapy.Spider):
 
         #cookiejarkey = request.meta.get("cookiejar")
         #jar = self.jars[cookiejarkey]
-        #jar.extract_cookies(response, request)
+        athing = jar.extract_cookies(response, response.request)
+        print "ARE THESE COOKIES?"
+        print athing
 
 
         yield r
