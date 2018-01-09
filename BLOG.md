@@ -298,6 +298,21 @@ DOWNLOADER_MIDDLEWARES = {
 ```
 
 
+Going to do what I should have done initially and create a virualenv
+`$ mkvirtualenv hotlanesbot`
+
+Installing scrapy (note this, failed the first time I ran it on an error w/ `cryptography` having to do with `python < 3`, but it was fun on a re-run):
+`$ pip install --target=$PWD scrapy`
+`$ pip install service_identity`
+`$ pip install --target=$PWD service_identity`
+`$ pip install --upgrade google-auth-oauthlib`
+
+then:
+`(hotlanesbot)tollspider $ scrapy startproject vai66tolls`
+
+`(hotlanesbot)tollspider $ cd vai66tolls/`
+`(hotlanesbot)vai66tolls $ scrapy genspider vai66tolls-spider vai66tolls.com`
+
 
 
 
