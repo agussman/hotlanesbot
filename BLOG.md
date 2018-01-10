@@ -306,7 +306,7 @@ Installing scrapy (note this, failed the first time I ran it on an error w/ `cry
 `$ pip install service_identity`
 `$ pip install --target=$PWD service_identity`
 `$ pip install --upgrade google-auth-oauthlib`
-
+`$ pip install Scrapy` <-- this is what mattered to get rid of the opentype error
 then:
 `(hotlanesbot)tollspider $ scrapy startproject vai66tolls`
 
