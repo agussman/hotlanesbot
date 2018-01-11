@@ -13,15 +13,17 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
             f.write(response.body)
         self.log('Saved file %s' % filename)
 
-        self.log('Initial request headers: (%s)' % response.headers)
+        self.log('Initial Response headers: (%s)' % response.headers)
 
-        proto_cookies = response.headers.getlist('Cookie')
-        self.log('Cookies?: (%s)' % proto_cookies)
+        # look for "cookie" things in response headers
+        poss_cookies = response.headers.getlist('Set-Cookie')
+        self.log('Set-Cookie?: (%s)' % poss_cookies)
 
-        cookieJar = response.meta.setdefault('cookie_jar', CookieJar())
-        cookieJar.extract_cookies(response, response.request)
-        for cookie in cookieJar:
-            self.log('cookies %s' % cookie)
+        poss_cookies = response.headers.getlist('Cookie')
+        self.log('Cookie?: (%s)' % poss_cookies)
+
+        poss_cookies = response.headers.getlist('cookie')
+        self.log('cookie?: (%s)' % poss_cookies)
 
         # Parse Eastbound
         r = scrapy.FormRequest.from_response(
@@ -36,5 +38,5 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         with open(filename, 'wb') as f:
             f.write(response.body)
         self.log('Saved file %s' % filename)
-        self.log('request headers: %s' % response.request.headers)
-        self.log('request cookies: %s' % response.request.cookies)
+        self.log('Request headers: %s' % response.request.headers)
+        self.log('Request cookies: %s' % response.request.cookies)
