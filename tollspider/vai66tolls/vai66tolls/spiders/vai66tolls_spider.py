@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import scrapy
-from scrapy.http.cookies import CookieJar
 
 class Vai66tollsSpiderSpider(scrapy.Spider):
     name = 'vai66tolls-spider'
@@ -8,7 +7,8 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
     start_urls = ['http://vai66tolls.com/']
 
     def parse(self, response):
-        filename = "/tmp/body.html"
+        # Doesn't do anything other than make the form request so we can get a cookie
+        filename = "/tmp/parse.html"
         with open(filename, 'wb') as f:
             f.write(response.body)
         self.log('Saved file %s' % filename)
@@ -28,15 +28,47 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         # Parse Eastbound
         r = scrapy.FormRequest.from_response(
             response,
-            callback=self.parse_eb,
+            callback=self.parse_form,
             )
 
         yield r
 
-    def parse_eb(self, response):
-        filename = "/tmp/eb.txt"
+    def parse_form(self, response):
+        filename = "/tmp/parse_form.html"
         with open(filename, 'wb') as f:
             f.write(response.body)
         self.log('Saved file %s' % filename)
-        self.log('Request headers: %s' % response.request.headers)
-        self.log('Request cookies: %s' % response.request.cookies)
+        self.log('2 Request headers: %s' % response.request.headers)
+        self.log('2 Request cookies: %s' % response.request.cookies)
+        self.log('2 Response headers: %s' % response.headers)
+
+        # Parse Eastbound
+        r = scrapy.FormRequest.from_response(
+            response,
+            #formid="form1",
+            formdata={
+                #'sm1': 'sm1|btnDirUpdate',
+                'Dir': 'rbEast',
+                #"__ASYNCPOST": "true",
+                #'datepicker': '01/02/2018',
+                #'timepicker': '11:04pm',
+                },
+            callback=self.parse_eb,
+        )
+
+
+
+
+    def parse_eb(self, response):
+        self.log('calling parse_eb')
+        self.log_response(response, "EB")
+
+
+    def log_response(self, response, prefix):
+        filename = "/tmp/{}.html".format(prefix)
+        with open(filename, 'wb') as f:
+            f.write(response.body)
+        self.log('Saved file %s' % filename)
+        self.log('%s Request headers: %s' % (prefix, response.request.headers))
+        self.log('%s Request cookies: %s' % (prefix, response.request.cookies))
+        self.log('%s Response headers: %s' % (prefix, response.headers))
