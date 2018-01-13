@@ -47,14 +47,16 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
             response,
             #formid="form1",
             formdata={
-                #'sm1': 'sm1|btnDirUpdate',
+                'sm1': 'sm1|btnDirUpdate',
                 'Dir': 'rbEast',
-                #"__ASYNCPOST": "true",
-                #'datepicker': '01/02/2018',
-                #'timepicker': '11:04pm',
+                "__ASYNCPOST": "true",
+                'datepicker': '01/02/2018',
+                'timepicker': '11:04pm',
                 },
             callback=self.parse_eb,
         )
+
+        yield r
 
 
 
@@ -68,7 +70,8 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         filename = "/tmp/{}.html".format(prefix)
         with open(filename, 'wb') as f:
             f.write(response.body)
-        self.log('Saved file %s' % filename)
+        self.log('%s Saved file %s' % (prefix, filename))
         self.log('%s Request headers: %s' % (prefix, response.request.headers))
         self.log('%s Request cookies: %s' % (prefix, response.request.cookies))
         self.log('%s Response headers: %s' % (prefix, response.headers))
+        self.log("\n".join(response.request.body.split('&')))
