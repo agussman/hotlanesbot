@@ -49,9 +49,12 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
             formdata={
                 'sm1': 'sm1|btnDirUpdate',
                 'Dir': 'rbEast',
-                "__ASYNCPOST": "true",
-                'datepicker': '01/02/2018',
-                'timepicker': '11:04pm',
+                "__ASYNCPOST": "true", # I think this is important?
+                'datepicker': '12/04/2017',
+                'timepicker': '7:30am',
+                'ddlExitAfterSel': '16',
+                'ddlEntryInterch': '5',
+                'ddlExitInterch': '16',
                 },
             callback=self.parse_eb,
         )
@@ -64,6 +67,33 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
     def parse_eb(self, response):
         self.log('calling parse_eb')
         self.log_response(response, "EB")
+
+        # r = scrapy.FormRequest.from_response(
+        #     response,
+        #     #formid="form1",
+        #     formdata={
+        #         'sm1': 'sm1|btnDirUpdate',
+        #         'Dir': 'rbEast',
+        #         "__ASYNCPOST": "true", # I think this is important?
+        #         'datepicker': '12/04/2017',
+        #         'timepicker': '7:30am',
+        #         'ddlExitAfterSel': 16,
+        #         'ddlEntryInterch': 5,
+        #         'ddlExitInterch': 16,
+        #         },
+        #     callback=self.parse_date,
+        # )
+        #
+        # yield r
+
+
+    def parse_date(self, response):
+        self.log('calling parse_date')
+        self.log_response(response, "DS")
+
+
+
+
 
 
     def log_response(self, response, prefix):

@@ -313,6 +313,28 @@ then:
 `(hotlanesbot)tollspider $ cd vai66tolls/`
 `(hotlanesbot)vai66tolls $ scrapy genspider vai66tolls-spider vai66tolls.com`
 
+# Some HARD learned lessons here:
+
+You need to submit the form first before you get your first cookie (ASP.NET_SessionId=gobledegook).
+Cookie management is handled by a downloader middleware class and there's no easy way to get at what
+it's actually doing. Even when cookies were being used, I didn't see them in `request.cookies` or
+`response.request.cookies`.
+
+When building the POST formdata, you need to put numbers in quotes and have them treated as strings. 
+Leaving them unquoted gives you a pretty obscure error message.
+https://stackoverflow.com/a/42409239/3175343
+
+> he reason behind this issue is, in Form Data, never ever treat Null, Boolean (True/False) and number as they are. Always treat it as a string. In python, Null is None, but in form data, it's always 'null'. True or False is written as 'true' or 'false'. For number, make it a string.
+
+
+Apparently ASP.net is super anal retentive and will TOTALLY NARC YOU OUT if you try to send it 
+variables it isn't expecting yet. For your trouble, you get a 505 and this response:
+`505|error|500|Invalid postback or callback argument.`
+https://stackoverflow.com/a/5860178/3175343
+
+
+
+
 
 # This seems useful, says Scrapy currently broken, using Requests instead?
 https://github.com/rmadhok/scrapy-crawl-asp
