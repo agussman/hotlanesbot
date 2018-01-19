@@ -29,6 +29,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         r = scrapy.FormRequest.from_response(
             response,
             callback=self.parse_form,
+            #callback=self.parse_eb,
             )
 
         yield r
@@ -49,12 +50,14 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
             formdata={
                 'sm1': 'sm1|btnDirUpdate',
                 'Dir': 'rbEast',
+                'txtRunRefresh': '',
                 "__ASYNCPOST": "true", # I think this is important?
-                'datepicker': '12/04/2017',
-                'timepicker': '7:30am',
-                'ddlExitAfterSel': '16',
-                'ddlEntryInterch': '5',
-                'ddlExitInterch': '16',
+                'btnDirUpdate': '',
+                #'datepicker': '12/04/2017',
+                #'timepicker': '7:30am',
+                #'ddlExitAfterSel': '16',
+                #'ddlEntryInterch': '5',
+                #'ddlExitInterch': '16',
                 },
             callback=self.parse_eb,
         )
@@ -66,30 +69,32 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
 
     def parse_eb(self, response):
         self.log('calling parse_eb')
-        self.log_response(response, "EB")
+        self.log_response(response, "eb")
 
-        # r = scrapy.FormRequest.from_response(
-        #     response,
-        #     #formid="form1",
-        #     formdata={
-        #         'sm1': 'sm1|btnDirUpdate',
-        #         'Dir': 'rbEast',
-        #         "__ASYNCPOST": "true", # I think this is important?
-        #         'datepicker': '12/04/2017',
-        #         'timepicker': '7:30am',
-        #         'ddlExitAfterSel': 16,
-        #         'ddlEntryInterch': 5,
-        #         'ddlExitInterch': 16,
-        #         },
-        #     callback=self.parse_date,
-        # )
-        #
-        # yield r
+        r = scrapy.FormRequest.from_response(
+            response,
+            #formid="form1",
+            formdata={
+                'sm1': 'sm1|btnUpdateBeginSel',
+                'Dir': 'rbEast',
+                'txtRunRefresh': '',
+                "__ASYNCPOST": "true", # I think this is important?
+                #'datepicker': '12/04/2017',
+                #'timepicker': '7:30am',
+                #'ddlExitAfterSel': 16,
+                'ddlEntryInterch': 5,
+                #'ddlExitInterch': 16,
+                'btnUpdateBeginSel': "Select this Entry"
+                },
+            callback=self.parse_eb_entry,
+        )
+
+        yield r
 
 
-    def parse_date(self, response):
-        self.log('calling parse_date')
-        self.log_response(response, "DS")
+    def parse_eb_entry(self, response):
+        self.log('calling parse_eb_entry')
+        self.log_response(response, "eb_entry")
 
 
 
