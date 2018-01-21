@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 import scrapy
 
+OUTDIR="./log/"
+
 class Vai66tollsSpiderSpider(scrapy.Spider):
     name = 'vai66tolls-spider'
     allowed_domains = ['vai66tolls.com']
     start_urls = ['http://vai66tolls.com/']
 
     def parse(self, response):
+        # Call the initial page
         self.log('calling parse')
         self.log_response(response, "parse")
 
@@ -14,8 +17,50 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         r = scrapy.FormRequest.from_response(
             response,
             callback=self.parse_form,
-            #callback=self.parse_pre_toll,
             )
+
+        yield r
+
+    def parse_form(self, response):
+        self.log('calling parse_form')
+        self.log_response(response, "parse_form")
+
+        # POST Eastbound Selection
+        r = scrapy.FormRequest.from_response(
+            response,
+            #formid="form1",
+            formdata={
+                'sm1': 'sm1|btnDirUpdate',
+                'Dir': 'rbEast',
+                'txtRunRefresh': '',
+                "__ASYNCPOST": "true",  # I think this is important?
+                'btnDirUpdate': '',
+                #'datepicker': '12/04/2017',
+                #'timepicker': '7:30am',
+                #'ddlExitAfterSel': '16',
+                #'ddlEntryInterch': '5',
+                #'ddlExitInterch': '16',
+                },
+            callback=self.parse_last,
+        )
+
+        yield r
+
+        self.log('DOES THIS SHOW UP?')
+
+        # POST Westbound Selection
+        r = scrapy.FormRequest.from_response(
+            response,
+            #formid="form1",
+            formdata={
+                'sm1': 'sm1|btnDirUpdate',
+                'Dir': 'rbWest',
+                'txtRunRefresh': '',
+                "__ASYNCPOST": "true",  # I think this is important?
+                'btnDirUpdate': '',
+                },
+            callback=self.parse_last2,
+        )
 
         yield r
 
@@ -26,7 +71,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
 
         r = scrapy.FormRequest.from_response(
             response,
-            #formid="form1",
+            formid="form1",
             formdata={
                 'sm1': 'sm1|btnUpdateEndSel',
                 'Dir': 'rbEast',
@@ -47,30 +92,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
 
 
 
-    def parse_form(self, response):
-        self.log('calling parse_form')
-        self.log_response(response, "parse_form")
 
-        # Parse Eastbound
-        r = scrapy.FormRequest.from_response(
-            response,
-            #formid="form1",
-            formdata={
-                'sm1': 'sm1|btnDirUpdate',
-                'Dir': 'rbEast',
-                'txtRunRefresh': '',
-                "__ASYNCPOST": "true", # I think this is important?
-                'btnDirUpdate': '',
-                #'datepicker': '12/04/2017',
-                #'timepicker': '7:30am',
-                #'ddlExitAfterSel': '16',
-                #'ddlEntryInterch': '5',
-                #'ddlExitInterch': '16',
-                },
-            callback=self.parse_pre_toll,
-        )
-
-        yield r
 
 
 
@@ -105,16 +127,23 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         self.log_response(response, "eb_entry")
 
 
+    def parse_last(self, response):
+        self.log('calling last')
+        self.log_response(response, "last")
 
+    def parse_last2(self, response):
+        self.log('calling last2')
+        self.log_response(response, "last2")
 
 
 
     def log_response(self, response, prefix):
-        filename = "/tmp/{}.html".format(prefix)
+        filename = OUTDIR+"/{}.html".format(prefix)
         with open(filename, 'wb') as f:
             f.write(response.body)
         self.log('%s Saved file %s' % (prefix, filename))
         self.log('%s Request headers: %s' % (prefix, response.request.headers))
         self.log('%s Request cookies: %s' % (prefix, response.request.cookies))
+        self.log('%s Request body split:')
+        self.log("\n\t".join(response.request.body.split('&')))
         self.log('%s Response headers: %s' % (prefix, response.headers))
-        self.log("\n".join(response.request.body.split('&')))
