@@ -41,7 +41,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
                 #'ddlEntryInterch': '5',
                 #'ddlExitInterch': '16',
                 },
-            callback=self.parse_last,
+            callback=self.parse_eb,
         )
 
         yield r
@@ -100,6 +100,16 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
     def parse_eb(self, response):
         self.log('calling parse_eb')
         self.log_response(response, "eb")
+
+        # Iterate over the Entry Interchange options
+        #entry_points = response.xpath("//*[@id='ddlEntryInterch']/option/@value").extract()
+        #entry_points = response.xpath("//*[@id='ddlEntryInterch']/option/text()").extract()
+        entry_points = response.select("//*[@id='ddlEntryInterch']/option")
+        for ep in entry_points:
+            value = ep.select('@value').extract()
+            text = ep.select('text()').extract()
+            self.log("Entry point: {}".format(value))
+
 
         r = scrapy.FormRequest.from_response(
             response,
