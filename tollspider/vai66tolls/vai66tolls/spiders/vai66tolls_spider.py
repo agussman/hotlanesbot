@@ -104,11 +104,13 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         # Iterate over the Entry Interchange options
         #entry_points = response.xpath("//*[@id='ddlEntryInterch']/option/@value").extract()
         #entry_points = response.xpath("//*[@id='ddlEntryInterch']/option/text()").extract()
-        entry_points = response.select("//*[@id='ddlEntryInterch']/option")
+        entry_points = response.xpath("//*[@id='ddlEntryInterch']/option")
         for ep in entry_points:
-            value = ep.select('@value').extract()
-            text = ep.select('text()').extract()
-            self.log("Entry point: {}".format(value))
+            value = ep.xpath('@value').extract()[0]
+            text = ep.xpath('text()').extract()[0]
+            if text == 'Select Location':
+                continue
+            self.log("Entry point: {} {}".format(value, text))
 
 
         r = scrapy.FormRequest.from_response(
