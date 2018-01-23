@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 import scrapy
+from scrapy import Request
+from itertools import izip_longest # used by grouper
+
 
 OUTDIR="./log/"
 
@@ -101,6 +104,14 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         self.log('calling parse_eb')
         self.log_response(response, "eb")
 
+        # Parse the funky data, grab the ASP.net variables
+        asp_vars = {}
+        for (length, type, id, content) in grouper(response.body.split("|"), 4):
+            self.log("pipedem: {}".format(id))
+            if id and id.startswith("__"):
+                asp_vars[id] = content
+
+
         # Iterate over the Entry Interchange options
         #entry_points = response.xpath("//*[@id='ddlEntryInterch']/option/@value").extract()
         #entry_points = response.xpath("//*[@id='ddlEntryInterch']/option/text()").extract()
@@ -113,25 +124,53 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
             self.log("Entry point: {} {}".format(value, text))
 
 
-        r = scrapy.FormRequest.from_response(
-            response,
-            #formid="form1",
-            formdata={
-                'sm1': 'sm1|btnUpdateBeginSel',
-                'Dir': 'rbEast',
-                'txtRunRefresh': '',
-                "__ASYNCPOST": "true", # I think this is important?
-                #'datepicker': '12/04/2017',
-                #'timepicker': '7:30am',
-                #'ddlExitAfterSel': 16,
-                'ddlEntryInterch': 5,
-                #'ddlExitInterch': 16,
-                'btnUpdateBeginSel': "Select this Entry"
-                },
-            callback=self.parse_eb_entry,
+        # Build the post body
+        post_body = {
+            'sm1': 'sm1|btnUpdateBeginSel',
+            'Dir': 'rbEast',
+            'txtRunRefresh': '',
+            "__ASYNCPOST": "true", # I think this is important?
+            'ddlEntryInterch': 5,
+            'btnUpdateBeginSel': "Select this Entry"
+        }
+        # prepopulate with stuff we parsed from asp_vars or empty string if its not there
+        for key in ['__VIEWSTATE', '__VIEWSTATEGENERATOR', '__EVENTVALIDATION']:
+            post_body[key] = asp_vars[key]
+        for key in ['__EVENTTARGET', '__EVENTARGUMENT', '__LASTFOCUS']:
+            post_body[key] = ''
+
+
+        # Yield a Request
+        r = scrapy.FormRequest(
+            url="https://vai66tolls.com/",
+            method="POST",
+            body=post_body,
+            callback=self.parse_eb_entry()
         )
 
         yield r
+
+        # r = scrapy.FormRequest.from_response(
+        #     response,
+        #     #formid="form1",
+        #     formdata={
+        #         'sm1': 'sm1|btnUpdateBeginSel',
+        #         'Dir': 'rbEast',
+        #         'txtRunRefresh': '',
+        #         "__ASYNCPOST": "true", # I think this is important?
+        #         #'datepicker': '12/04/2017',
+        #         #'timepicker': '7:30am',
+        #         #'ddlExitAfterSel': 16,
+        #         'ddlEntryInterch': 5,
+        #         #'ddlExitInterch': 16,
+        #         'btnUpdateBeginSel': "Select this Entry"
+        #         },
+        #     callback=self.parse_eb_entry,
+        # )
+        #
+        # yield r
+
+
 
 
     def parse_eb_entry(self, response):
@@ -159,3 +198,18 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         self.log('%s Request body split:')
         self.log("\n\t".join(response.request.body.split('&')))
         self.log('%s Response headers: %s' % (prefix, response.headers))
+
+
+#
+# END CLASS
+# UTILITY STUFF HERE, MOVE TO OWN FILE
+#
+
+
+# itertools example, move to utils file
+def grouper(iterable, n, fillvalue=None):
+    "Collect data into fixed-length chunks or blocks"
+    # from itertools import zip_longest
+    # grouper('ABCDEFG', 3, 'x') --> ABC DEF Gxx
+    args = [iter(iterable)] * n
+    return izip_longest(fillvalue=fillvalue, *args)

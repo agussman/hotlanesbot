@@ -339,8 +339,17 @@ https://stackoverflow.com/a/5860178/3175343
 # This seems useful, says Scrapy currently broken, using Requests instead?
 https://github.com/rmadhok/scrapy-crawl-asp
 
+# Some useful notes here:
+https://stackoverflow.com/questions/41074638/below-post-method-is-not-working-in-scrapy
 
+# Another example spider
+https://github.com/AmbientLighter/rpn-fas/blob/master/fas/spiders/rnp.py
 
+# Dealing w/ the pipe-delimited data
+https://www.reddit.com/r/Python/comments/45o1v9/accessing_aspnet_pipeline_delimited_data_for/
+
+# http://toddhayton.com/2015/05/04/scraping-aspnet-pages-with-ajax-pagination/
+Actual description of aspx.net ajax pagination that I found initially and completely failed to comprehend
 
 ElasticCache - in-memory data store
 * Redis
