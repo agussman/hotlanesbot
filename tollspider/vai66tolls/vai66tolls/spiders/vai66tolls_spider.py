@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import scrapy
-from scrapy import Request
+from scrapy import Request, FormRequest
 from itertools import izip_longest # used by grouper
-
+import json
 
 OUTDIR="./log/"
 
@@ -130,7 +130,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
             'Dir': 'rbEast',
             'txtRunRefresh': '',
             "__ASYNCPOST": "true", # I think this is important?
-            'ddlEntryInterch': 5,
+            'ddlEntryInterch': '5',
             'btnUpdateBeginSel': "Select this Entry"
         }
         # prepopulate with stuff we parsed from asp_vars or empty string if its not there
@@ -139,13 +139,14 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         for key in ['__EVENTTARGET', '__EVENTARGUMENT', '__LASTFOCUS']:
             post_body[key] = ''
 
+        self.log("Let's build a FormRequest")
 
         # Yield a Request
-        r = scrapy.FormRequest(
+        r = FormRequest(
             url="https://vai66tolls.com/",
-            method="POST",
-            body=post_body,
-            callback=self.parse_eb_entry()
+            #method="POST",
+            formdata=post_body,
+            callback=self.parse_eb_entry
         )
 
         yield r
