@@ -104,14 +104,6 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         self.log('calling parse_eb')
         self.log_response(response, "eb")
 
-        # Parse the funky data, grab the ASP.net variables
-        asp_vars = {}
-        for (length, type, id, content) in grouper(response.body.split("|"), 4):
-            self.log("pipedem: {}".format(id))
-            if id and id.startswith("__"):
-                asp_vars[id] = content
-
-
         # Iterate over the Entry Interchange options
         #entry_points = response.xpath("//*[@id='ddlEntryInterch']/option/@value").extract()
         #entry_points = response.xpath("//*[@id='ddlEntryInterch']/option/text()").extract()
@@ -133,11 +125,8 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
             'ddlEntryInterch': '5',
             'btnUpdateBeginSel': "Select this Entry"
         }
-        # prepopulate with stuff we parsed from asp_vars or empty string if its not there
-        for key in ['__VIEWSTATE', '__VIEWSTATEGENERATOR', '__EVENTVALIDATION']:
-            post_body[key] = asp_vars[key]
-        for key in ['__EVENTTARGET', '__EVENTARGUMENT', '__LASTFOCUS']:
-            post_body[key] = ''
+
+        post_body = self.update_post_body_with_asp_vars(response, post_body)
 
         self.log("Let's build a FormRequest")
 
@@ -151,32 +140,72 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
 
         yield r
 
-        # r = scrapy.FormRequest.from_response(
-        #     response,
-        #     #formid="form1",
-        #     formdata={
-        #         'sm1': 'sm1|btnUpdateBeginSel',
-        #         'Dir': 'rbEast',
-        #         'txtRunRefresh': '',
-        #         "__ASYNCPOST": "true", # I think this is important?
-        #         #'datepicker': '12/04/2017',
-        #         #'timepicker': '7:30am',
-        #         #'ddlExitAfterSel': 16,
-        #         'ddlEntryInterch': 5,
-        #         #'ddlExitInterch': 16,
-        #         'btnUpdateBeginSel': "Select this Entry"
-        #         },
-        #     callback=self.parse_eb_entry,
-        # )
-        #
-        # yield r
-
-
-
 
     def parse_eb_entry(self, response):
         self.log('calling parse_eb_entry')
         self.log_response(response, "eb_entry")
+
+        exit_points = response.xpath("//*[@id='ddlExitInterch']/option")
+        for ep in exit_points:
+            value = ep.xpath('@value').extract()[0]
+            text = ep.xpath('text()').extract()[0]
+            if text == 'Select Location':
+                continue
+            self.log("Exit point: {} {}".format(value, text))
+
+        # Build the post body
+        post_body = {
+            'sm1': 'sm1|btnUpdateEndSel',
+            'Dir': 'rbEast',
+            'txtRunRefresh': '',
+            "__ASYNCPOST": "true", # I think this is important?
+            'ddlEntryInterch': '5',
+            'ddlExitInterch': '12',
+            "ddlExitAfterSel": '12',
+            "datepicker": "12/04/2017",
+            "timepicker": "8 : 30 am",
+            'btnUpdateBeginSel': "Select this Entry"
+        }
+
+        post_body = self.update_post_body_with_asp_vars(response, post_body)
+
+        self.log("Let's build another FormRequest")
+
+        # Yield a Request
+        r = FormRequest(
+            url="https://vai66tolls.com/",
+            #method="POST",
+            formdata=post_body,
+            callback=self.parse_last
+        )
+
+        yield r
+
+
+
+    def update_post_body_with_asp_vars(self, response, post_body):
+        asp_vars = self.extract_asp_vars(response)
+
+        # prepopulate with stuff we parsed from asp_vars or empty string if its not there
+        for key in ['__VIEWSTATE', '__VIEWSTATEGENERATOR', '__EVENTVALIDATION']:
+            post_body[key] = asp_vars[key]
+        for key in ['__EVENTTARGET', '__EVENTARGUMENT', '__LASTFOCUS']:
+            post_body[key] = ''
+
+        return post_body
+
+
+    def extract_asp_vars(self, response):
+        # Parse the funky pipedelimited asp response data, grab the ASP.net variables
+        asp_vars = {}
+        for (length, type, id, content) in grouper(response.body.split("|"), 4):
+            self.log("pipedem: {}".format(id))
+            if id and id.startswith("__"):  # e.g. __VIEWSTATE
+                asp_vars[id] = content
+
+        return asp_vars
+
+
 
 
     def parse_last(self, response):
