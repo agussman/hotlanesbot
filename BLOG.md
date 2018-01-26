@@ -348,8 +348,11 @@ https://github.com/AmbientLighter/rpn-fas/blob/master/fas/spiders/rnp.py
 # Dealing w/ the pipe-delimited data
 https://www.reddit.com/r/Python/comments/45o1v9/accessing_aspnet_pipeline_delimited_data_for/
 
-# http://toddhayton.com/2015/05/04/scraping-aspnet-pages-with-ajax-pagination/
-Actual description of aspx.net ajax pagination that I found initially and completely failed to comprehend
+# Actual description of aspx.net ajax pagination that I found initially and completely failed to comprehend
+http://toddhayton.com/2015/05/04/scraping-aspnet-pages-with-ajax-pagination/
+
+# Scrapy and DynamoDB on AWS
+http://neuralfoundry.com/scrapy-and-dynamodb-on-aws/
 
 ElasticCache - in-memory data store
 * Redis

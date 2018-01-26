@@ -153,33 +153,60 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
                 continue
             self.log("Exit point: {} {}".format(value, text))
 
-        # Build the post body
-        post_body = {
-            'sm1': 'sm1|btnUpdateEndSel',
-            'Dir': 'rbEast',
-            'txtRunRefresh': '',
-            "__ASYNCPOST": "true", # I think this is important?
-            'ddlEntryInterch': '5',
-            'ddlExitInterch': '12',
-            "ddlExitAfterSel": '12',
-            "datepicker": "12/04/2017",
-            "timepicker": "8 : 30 am",
-            'btnUpdateBeginSel': "Select this Entry"
+            # Build the post body
+            post_body = {
+                'sm1': 'sm1|btnUpdateEndSel',
+                'Dir': 'rbEast',
+                'txtRunRefresh': '',
+                "__ASYNCPOST": "true", # I think this is important?
+                'ddlEntryInterch': '5',
+                'ddlExitInterch': value,
+                "ddlExitAfterSel": value,
+                "datepicker": "12/04/2017",
+                "timepicker": "8 : 30 am",
+                'btnUpdateBeginSel': "Select this Entry"
+            }
+
+            # Things to pass along
+            meta = {
+                'ddlExitInterch': value,
+                "ddlExitAfterSel": value,
+            }
+
+            post_body = self.update_post_body_with_asp_vars(response, post_body)
+
+            self.log("Let's build another FormRequest")
+
+            # Yield a Request
+            r = FormRequest(
+                url="https://vai66tolls.com/",
+                #method="POST",
+                formdata=post_body,
+                callback=self.parse_last,
+                meta=meta
+            )
+
+            yield r
+
+
+    def parse_last(self, response):
+        self.log('calling last')
+        self.log_response(response, "last")
+
+        toll_amount = response.xpath("//*[@id='spanTollAmt']/text()").extract()[0]
+
+        self.log("TOLL AMOUNT: {}".format(toll_amount))
+
+        meta = response.meta
+
+        retval = {
+            "timestamp": "20170104",
+            "ddlEntryInterch": "5",
+            "ddlExitInterch": meta["ddlExitInterch"],
+            "toll": toll_amount.replace("$", "")
         }
 
-        post_body = self.update_post_body_with_asp_vars(response, post_body)
-
-        self.log("Let's build another FormRequest")
-
-        # Yield a Request
-        r = FormRequest(
-            url="https://vai66tolls.com/",
-            #method="POST",
-            formdata=post_body,
-            callback=self.parse_last
-        )
-
-        yield r
+        yield retval
 
 
 
@@ -208,9 +235,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
 
 
 
-    def parse_last(self, response):
-        self.log('calling last')
-        self.log_response(response, "last")
+
 
     def parse_last2(self, response):
         self.log('calling last2')
