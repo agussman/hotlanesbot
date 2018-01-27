@@ -158,41 +158,47 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
                 continue
             self.log("Exit point: {} {}".format(value, text))
 
-            # Build the post body
-            post_body = {
-                'sm1': 'sm1|btnUpdateEndSel',
-                'Dir': 'rbEast',
-                'txtRunRefresh': '',
-                "__ASYNCPOST": "true", # I think this is important?
-                'ddlEntryInterch': ddlEntryInterch,
-                'ddlExitInterch': value,
-                "ddlExitAfterSel": value,
-                "datepicker": "12/04/2017",
-                "timepicker": "8 : 30 am",
-                'btnUpdateBeginSel': "Select this Entry"
-            }
+            for hour in [7, 8]:
 
-            # Things to pass along
-            meta = {
-                'ddlExitInterch': value,
-                "ddlExitAfterSel": value,
-                "ddlEntryInterch": ddlEntryInterch
-            }
+                timepicker = "{} : 30 am".format(hour)
 
-            post_body = self.update_post_body_with_asp_vars(response, post_body)
 
-            self.log("Let's build another FormRequest")
+                # Build the post body
+                post_body = {
+                    'sm1': 'sm1|btnUpdateEndSel',
+                    'Dir': 'rbEast',
+                    'txtRunRefresh': '',
+                    "__ASYNCPOST": "true", # I think this is important?
+                    'ddlEntryInterch': ddlEntryInterch,
+                    'ddlExitInterch': value,
+                    "ddlExitAfterSel": value,
+                    "datepicker": "12/04/2017",
+                    "timepicker": timepicker,
+                    'btnUpdateBeginSel': "Select this Entry"
+                }
 
-            # Yield a Request
-            r = FormRequest(
-                url="https://vai66tolls.com/",
-                #method="POST",
-                formdata=post_body,
-                callback=self.parse_last,
-                meta=meta
-            )
+                # Things to pass along
+                meta = {
+                    'ddlExitInterch': value,
+                    "ddlExitAfterSel": value,
+                    "ddlEntryInterch": ddlEntryInterch,
+                    "timestamp": timepicker
+                }
 
-            yield r
+                post_body = self.update_post_body_with_asp_vars(response, post_body)
+
+                self.log("Let's build another FormRequest")
+
+                # Yield a Request
+                r = FormRequest(
+                    url="https://vai66tolls.com/",
+                    #method="POST",
+                    formdata=post_body,
+                    callback=self.parse_last,
+                    meta=meta
+                )
+
+                yield r
 
 
     def parse_last(self, response):
@@ -206,7 +212,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         meta = response.meta
 
         retval = {
-            "timestamp": "20170104",
+            "timestamp": meta["timestamp"],
             "ddlEntryInterch": meta["ddlEntryInterch"],
             "ddlExitInterch": meta["ddlExitInterch"],
             "toll": toll_amount.replace("$", "")
