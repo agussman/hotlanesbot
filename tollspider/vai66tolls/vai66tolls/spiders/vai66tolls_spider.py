@@ -145,6 +145,11 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         self.log('calling parse_eb_entry')
         self.log_response(response, "eb_entry")
 
+        meta = response.meta
+
+        ddlEntryInterch = '5'
+
+
         exit_points = response.xpath("//*[@id='ddlExitInterch']/option")
         for ep in exit_points:
             value = ep.xpath('@value').extract()[0]
@@ -159,7 +164,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
                 'Dir': 'rbEast',
                 'txtRunRefresh': '',
                 "__ASYNCPOST": "true", # I think this is important?
-                'ddlEntryInterch': '5',
+                'ddlEntryInterch': ddlEntryInterch,
                 'ddlExitInterch': value,
                 "ddlExitAfterSel": value,
                 "datepicker": "12/04/2017",
@@ -171,6 +176,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
             meta = {
                 'ddlExitInterch': value,
                 "ddlExitAfterSel": value,
+                "ddlEntryInterch": ddlEntryInterch
             }
 
             post_body = self.update_post_body_with_asp_vars(response, post_body)
@@ -201,7 +207,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
 
         retval = {
             "timestamp": "20170104",
-            "ddlEntryInterch": "5",
+            "ddlEntryInterch": meta["ddlEntryInterch"],
             "ddlExitInterch": meta["ddlExitInterch"],
             "toll": toll_amount.replace("$", "")
         }
