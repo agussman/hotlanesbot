@@ -326,13 +326,19 @@ https://stackoverflow.com/a/42409239/3175343
 
 > he reason behind this issue is, in Form Data, never ever treat Null, Boolean (True/False) and number as they are. Always treat it as a string. In python, Null is None, but in form data, it's always 'null'. True or False is written as 'true' or 'false'. For number, make it a string.
 
-
 Apparently ASP.net is super anal retentive and will TOTALLY NARC YOU OUT if you try to send it 
 variables it isn't expecting yet. For your trouble, you get a 505 and this response:
 `505|error|500|Invalid postback or callback argument.`
 https://stackoverflow.com/a/5860178/3175343
 
+This means we have to traverse the pages in order. I can't just do one POST with start-interchange/timestamp/end-interchange. 
+But I dont actually have to traverse the full tree uniquely for each one, do I? I don't think so. I'm crawling the tree, not restarting each time.
 
+Also, it's not entirely clear, but the "AJAX" response from the server is actually pipe-delimited data. It looks like a bastardized amalgam of html and random data, but it's really of the form:
+```
+LENGTH|TYPE|ID|CONTENT
+```
+Function `extract_asp_vars` processes these response objects and returns the ASP.NET variables we care about (e.g., `__VIEWSTATE`).
 
 
 

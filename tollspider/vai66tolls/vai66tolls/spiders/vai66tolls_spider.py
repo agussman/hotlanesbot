@@ -158,7 +158,10 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
                 continue
             self.log("Exit point: {} {}".format(value, text))
 
-            for hour in [7, 8]:
+            # 5:30 to 9:30 am Weekdays EastBound
+            # 3:00 to 7:00 pm Weekdays Westbound
+            for hour in [5, 6, 7, 8, 9]:
+                for min in range(0, 60, 5):
 
                 timepicker = "{} : 30 am".format(hour)
 
