@@ -106,15 +106,12 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
 
 
 
-
-
-
-
-
-
     def parse_eb(self, response):
         self.log('calling parse_eb')
         self.log_response(response, "eb")
+
+        # Retrieve passed variables
+        meta = response.meta
 
         # Iterate over the Entry Interchange options
         #entry_points = response.xpath("//*[@id='ddlEntryInterch']/option/@value").extract()
@@ -127,14 +124,20 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
                 continue
             self.log("Entry point: {} {}".format(value, text))
 
+        # Add in the variables we're setting
+        meta.update(
+            {
+                'ddlEntryInterch': '5'
+            }
+        )
 
         # Build the post body
         post_body = {
             'sm1': 'sm1|btnUpdateBeginSel',
-            'Dir': 'rbEast',
+            'Dir': meta["Dir"],
             'txtRunRefresh': '',
-            "__ASYNCPOST": "true", # I think this is important?
-            'ddlEntryInterch': '5',
+            "__ASYNCPOST": "true",  # I think this is important?
+            'ddlEntryInterch': meta["ddlEntryInterch"],
             'btnUpdateBeginSel': "Select this Entry"
         }
 
@@ -147,7 +150,8 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
             url="https://vai66tolls.com/",
             #method="POST",
             formdata=post_body,
-            callback=self.parse_eb_entry
+            callback=self.parse_eb_entry,
+            meta=meta
         )
 
         yield r
@@ -176,8 +180,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
             stepinc = datetime.timedelta(minutes=5)
             timestamp = day + datetime.timedelta(hours=5, minutes=30)
             stoptime = day + datetime.timedelta(hours=6, minutes=00)
-            #for hour in [5, 6, 7, 8, 9]:
-            #    for min in range(0, 60, 5):
+
             while (timestamp <= stoptime):
 
                 datepicker = timestamp.strftime("%m/%d/%Y")
@@ -186,7 +189,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
                 # Build the post body
                 post_body = {
                     'sm1': 'sm1|btnUpdateEndSel',
-                    'Dir': 'rbEast',
+                    'Dir': "rbEast",
                     'txtRunRefresh': '',
                     "__ASYNCPOST": "true", # I think this is important?
                     'ddlEntryInterch': ddlEntryInterch,
@@ -227,7 +230,9 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         self.log('calling last')
         self.log_response(response, "last")
 
-        toll_amount = response.xpath("//*[@id='spanTollAmt']/text()").extract()[0]
+        toll_object = response.xpath("//*[@id='spanTollAmt']/text()").extract()
+        # Return 0 if we didn't get a result (note: this shouldn't happen!)
+        toll_amount = toll_object[0] if len(toll_object) > 0 else "0"
 
         self.log("TOLL AMOUNT: {}".format(toll_amount))
 
