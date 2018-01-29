@@ -3,6 +3,7 @@ import scrapy
 from scrapy import Request, FormRequest
 from itertools import izip_longest # used by grouper
 import json
+import datetime
 
 OUTDIR="./log/"
 
@@ -12,7 +13,8 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
     start_urls = ['http://vai66tolls.com/']
 
     def parse(self, response):
-        # Call the initial page
+        # Read the initial page
+        # This function doesn't really do anything other than submit the form the first time
         self.log('calling parse')
         self.log_response(response, "parse")
 
@@ -28,44 +30,54 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         self.log('calling parse_form')
         self.log_response(response, "parse_form")
 
-        # POST Eastbound Selection
-        r = scrapy.FormRequest.from_response(
-            response,
-            #formid="form1",
-            formdata={
-                'sm1': 'sm1|btnDirUpdate',
-                'Dir': 'rbEast',
-                'txtRunRefresh': '',
-                "__ASYNCPOST": "true",  # I think this is important?
-                'btnDirUpdate': '',
-                #'datepicker': '12/04/2017',
-                #'timepicker': '7:30am',
-                #'ddlExitAfterSel': '16',
-                #'ddlEntryInterch': '5',
-                #'ddlExitInterch': '16',
-                },
-            callback=self.parse_eb,
-        )
+        # Set direction "Dir", rbEast (morning) or rbWest (afternoon)
 
-        yield r
+        #for dir in ['rbEast', 'rbWest'];
+        for Dir in ['rbEast']:
 
-        self.log('DOES THIS SHOW UP?')
+            # Capture Dir in meta for downstream conditionals
+            meta = {
+                "Dir": Dir
+            }
 
-        # POST Westbound Selection
-        r = scrapy.FormRequest.from_response(
-            response,
-            #formid="form1",
-            formdata={
-                'sm1': 'sm1|btnDirUpdate',
-                'Dir': 'rbWest',
-                'txtRunRefresh': '',
-                "__ASYNCPOST": "true",  # I think this is important?
-                'btnDirUpdate': '',
-                },
-            callback=self.parse_last2,
-        )
+            # POST Dir Selection
+            r = scrapy.FormRequest.from_response(
+                response,
+                formdata={
+                    'sm1': 'sm1|btnDirUpdate',
+                    'Dir': Dir,
+                    'txtRunRefresh': '',
+                    "__ASYNCPOST": "true",  # I think this is important?
+                    'btnDirUpdate': '',
+                    #'datepicker': '12/04/2017',
+                    #'timepicker': '7:30am',
+                    #'ddlExitAfterSel': '16',
+                    #'ddlEntryInterch': '5',
+                    #'ddlExitInterch': '16',
+                    },
+                callback=self.parse_eb,
+                meta=meta
+            )
 
-        yield r
+            yield r
+
+        # self.log('DOES THIS SHOW UP?')
+        #
+        # # POST Westbound Selection
+        # r = scrapy.FormRequest.from_response(
+        #     response,
+        #     #formid="form1",
+        #     formdata={
+        #         'sm1': 'sm1|btnDirUpdate',
+        #         'Dir': 'rbWest',
+        #         'txtRunRefresh': '',
+        #         "__ASYNCPOST": "true",  # I think this is important?
+        #         'btnDirUpdate': '',
+        #         },
+        #     callback=self.parse_last2,
+        # )
+        #
+        # yield r
 
 
     def parse_pre_toll(self, response):
@@ -160,11 +172,16 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
 
             # 5:30 to 9:30 am Weekdays EastBound
             # 3:00 to 7:00 pm Weekdays Westbound
-            for hour in [5, 6, 7, 8, 9]:
-                for min in range(0, 60, 5):
+            day = datetime.datetime(2017, 12, 4)
+            stepinc = datetime.timedelta(minutes=5)
+            timestamp = day + datetime.timedelta(hours=5, minutes=30)
+            stoptime = day + datetime.timedelta(hours=6, minutes=00)
+            #for hour in [5, 6, 7, 8, 9]:
+            #    for min in range(0, 60, 5):
+            while (timestamp <= stoptime):
 
-                timepicker = "{} : 30 am".format(hour)
-
+                datepicker = timestamp.strftime("%m/%d/%Y")
+                timepicker = timestamp.strftime("%-H : %M %p")
 
                 # Build the post body
                 post_body = {
@@ -175,7 +192,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
                     'ddlEntryInterch': ddlEntryInterch,
                     'ddlExitInterch': value,
                     "ddlExitAfterSel": value,
-                    "datepicker": "12/04/2017",
+                    "datepicker": datepicker,
                     "timepicker": timepicker,
                     'btnUpdateBeginSel': "Select this Entry"
                 }
@@ -185,7 +202,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
                     'ddlExitInterch': value,
                     "ddlExitAfterSel": value,
                     "ddlEntryInterch": ddlEntryInterch,
-                    "timestamp": timepicker
+                    "timestamp": "{} + {}".format(datepicker, timepicker)
                 }
 
                 post_body = self.update_post_body_with_asp_vars(response, post_body)
@@ -202,6 +219,8 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
                 )
 
                 yield r
+
+                timestamp += stepinc
 
 
     def parse_last(self, response):
