@@ -124,37 +124,40 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
                 continue
             self.log("Entry point: {} {}".format(value, text))
 
-        # Add in the variables we're setting
-        meta.update(
-            {
-                'ddlEntryInterch': '5'
+        #for ddlEntryInterch in ['5', '9']:
+            ddlEntryInterch = value
+
+            # Add in the variables we're setting
+            meta.update(
+                {
+                    'ddlEntryInterch': ddlEntryInterch
+                }
+            )
+
+            # Build the post body
+            post_body = {
+                'sm1': 'sm1|btnUpdateBeginSel',
+                'Dir': meta["Dir"],
+                'txtRunRefresh': '',
+                "__ASYNCPOST": "true",  # I think this is important?
+                'ddlEntryInterch': meta["ddlEntryInterch"],
+                'btnUpdateBeginSel': "Select this Entry"
             }
-        )
 
-        # Build the post body
-        post_body = {
-            'sm1': 'sm1|btnUpdateBeginSel',
-            'Dir': meta["Dir"],
-            'txtRunRefresh': '',
-            "__ASYNCPOST": "true",  # I think this is important?
-            'ddlEntryInterch': meta["ddlEntryInterch"],
-            'btnUpdateBeginSel': "Select this Entry"
-        }
+            post_body = self.update_post_body_with_asp_vars(response, post_body)
 
-        post_body = self.update_post_body_with_asp_vars(response, post_body)
+            self.log("Let's build a FormRequest")
 
-        self.log("Let's build a FormRequest")
+            # Yield a Request
+            r = FormRequest(
+                url="https://vai66tolls.com/",
+                #method="POST",
+                formdata=post_body,
+                callback=self.parse_eb_entry,
+                meta=meta
+            )
 
-        # Yield a Request
-        r = FormRequest(
-            url="https://vai66tolls.com/",
-            #method="POST",
-            formdata=post_body,
-            callback=self.parse_eb_entry,
-            meta=meta
-        )
-
-        yield r
+            yield r
 
 
     def parse_eb_entry(self, response):
@@ -163,8 +166,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
 
         meta = response.meta
 
-        ddlEntryInterch = '5'
-
+        ddlEntryInterch = meta["ddlEntryInterch"]
 
         exit_points = response.xpath("//*[@id='ddlExitInterch']/option")
         for ep in exit_points:
@@ -174,10 +176,13 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
                 continue
             self.log("Exit point: {} {}".format(value, text))
 
+            ddlExitInterch = value
+            ddlExitAfterSel = '16'
+
             # 5:30 to 9:30 am Weekdays EastBound
             # 3:00 to 7:00 pm Weekdays Westbound
             day = datetime.datetime(2017, 12, 4)
-            stepinc = datetime.timedelta(minutes=5)
+            stepinc = datetime.timedelta(minutes=30)
             timestamp = day + datetime.timedelta(hours=5, minutes=30)
             stoptime = day + datetime.timedelta(hours=6, minutes=00)
 
@@ -193,8 +198,8 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
                     'txtRunRefresh': '',
                     "__ASYNCPOST": "true", # I think this is important?
                     'ddlEntryInterch': ddlEntryInterch,
-                    'ddlExitInterch': value,
-                    "ddlExitAfterSel": value,
+                    'ddlExitInterch': ddlExitInterch,
+                    "ddlExitAfterSel": ddlExitAfterSel,
                     "datepicker": datepicker,
                     "timepicker": timepicker,
                     'btnUpdateBeginSel': "Select this Entry"
@@ -202,8 +207,8 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
 
                 # Things to pass along
                 meta = {
-                    'ddlExitInterch': value,
-                    "ddlExitAfterSel": value,
+                    'ddlExitInterch': ddlExitInterch,
+                    "ddlExitAfterSel": ddlExitAfterSel,
                     "ddlEntryInterch": ddlEntryInterch,
                     "timestamp": "{} + {}".format(datepicker, timepicker)
                 }
