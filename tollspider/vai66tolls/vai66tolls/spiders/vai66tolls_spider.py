@@ -176,7 +176,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
                 # Build the post body
                 post_body = {
                     'sm1': 'sm1|btnUpdateEndSel',
-                    'Dir': "rbEast",
+                    'Dir': meta["Dir"],
                     'txtRunRefresh': '',
                     "__ASYNCPOST": "true", # I think this is important?
                     'ddlEntryInterch': ddlEntryInterch,
@@ -188,12 +188,12 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
                 }
 
                 # Things to pass along
-                meta = {
+                meta.update({
                     'ddlExitInterch': ddlExitInterch,
                     "ddlExitAfterSel": ddlExitAfterSel,
                     "ddlEntryInterch": ddlEntryInterch,
                     "timestamp": "{} + {}".format(datepicker, timepicker)
-                }
+                })
 
                 post_body = self.update_post_body_with_asp_vars(response, post_body)
 
