@@ -80,30 +80,6 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         # yield r
 
 
-    def parse_pre_toll(self, response):
-        self.log('calling pre_toll')
-        self.log_response(response, "pre_toll")
-
-        r = scrapy.FormRequest.from_response(
-            response,
-            formid="form1",
-            formdata={
-                'sm1': 'sm1|btnUpdateEndSel',
-                'Dir': 'rbEast',
-                'txtRunRefresh': '',
-                "__ASYNCPOST": "true", # I think this is important?
-                'datepicker': '12/04/2017',
-                'timepicker': '8:30am',
-                'ddlExitAfterSel': 10,
-                'ddlEntryInterch': 5,
-                'ddlExitInterch': 16,
-                'btnUpdateEndSel': 'Select this Exit'
-                },
-            callback=self.parse_eb_entry,
-        )
-
-        yield r
-
 
 
     def parse_eb(self, response):
