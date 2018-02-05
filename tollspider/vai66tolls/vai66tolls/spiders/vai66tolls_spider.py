@@ -12,6 +12,12 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
     allowed_domains = ['vai66tolls.com']
     start_urls = ['http://vai66tolls.com/']
 
+    def __init__(self, fullDay=None,  *args, **kwargs):
+        super(Vai66tollsSpiderSpider, self).__init__(*args, **kwargs)
+
+        self.fullDay = fullDay
+        self.log("fullDay={}".format(fullDay))
+
     def parse(self, response):
         # Read the initial page
         # This function doesn't really do anything other than submit the form the first time
