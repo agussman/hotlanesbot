@@ -99,7 +99,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         #entry_points = response.xpath("//*[@id='ddlEntryInterch']/option/@value").extract()
         #entry_points = response.xpath("//*[@id='ddlEntryInterch']/option/text()").extract()
         entry_points = response.xpath("//*[@id='ddlEntryInterch']/option")
-        for ep in entry_points[0:2]:
+        for ep in entry_points[0:5]:
             value = ep.xpath('@value').extract()[0]
             text = ep.xpath('text()').extract()[0]
             if text == 'Select Location':
@@ -151,7 +151,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         ddlEntryInterch = meta["ddlEntryInterch"]
 
         exit_points = response.xpath("//*[@id='ddlExitInterch']/option")
-        for ep in exit_points[0:2]:
+        for ep in exit_points[0:5]:
             value = ep.xpath('@value').extract()[0]
             text = ep.xpath('text()').extract()[0]
             if text == 'Select Location':
@@ -159,7 +159,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
             self.log("Exit point: {} {}".format(value, text))
 
             ddlExitInterch = value
-            ddlExitAfterSel = '16'
+            ddlExitAfterSel = "16"
             if meta["Dir"] == "rbWest":
                 ddlExitAfterSel = '4'
 
@@ -167,13 +167,13 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
             # 3:00 to 7:00 pm Weekdays Westbound
             day = datetime.datetime(2017, 12, 4)
             stepinc = datetime.timedelta(minutes=30)
-            timestamp = day + datetime.timedelta(hours=15, minutes=30)
-            stoptime = day + datetime.timedelta(hours=16, minutes=00)
+            timestamp = day + datetime.timedelta(hours=16, minutes=30)
+            stoptime = day + datetime.timedelta(hours=17, minutes=00)
 
             while (timestamp <= stoptime):
 
                 datepicker = timestamp.strftime("%m/%d/%Y")
-                timepicker = timestamp.strftime("%-H : %M %p")
+                timepicker = timestamp.strftime("%-I : %M %p")
 
                 # Build the post body
                 post_body = {
@@ -231,6 +231,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
             "timestamp": meta["timestamp"],
             "ddlEntryInterch": meta["ddlEntryInterch"],
             "ddlExitInterch": meta["ddlExitInterch"],
+            "ddlExitAfterSel": meta["ddlExitAfterSel"],
             "toll": toll_amount.replace("$", ""),
             "Dir": meta["Dir"]
         }
