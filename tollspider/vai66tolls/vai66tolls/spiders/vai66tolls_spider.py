@@ -11,12 +11,47 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
     name = 'vai66tolls-spider'
     allowed_domains = ['vai66tolls.com']
     start_urls = ['http://vai66tolls.com/']
+    #stepinc = datetime.timedelta(minutes=5)
 
-    def __init__(self, fullDay=None,  *args, **kwargs):
+    def __init__(self, fullDay=None,  Dir=None, *args, **kwargs):
         super(Vai66tollsSpiderSpider, self).__init__(*args, **kwargs)
 
-        self.fullDay = fullDay
-        self.log("fullDay={}".format(fullDay))
+        if (fullDay is not None and Dir is not None):
+            self.log("fullDay={}".format(fullDay))
+            self.log("Dir={}".format(Dir))
+
+            # Validate inputs
+            if (Dir != "rbEast" and Dir != "rbWest"):
+                self.log("Invalid value for Dir ({}), it must be rbEast or rbWest".format(Dir))
+                raise ValueError
+
+            # Save
+            self.Dir = Dir
+
+            try:
+                self.day = datetime.datetime.strptime(fullDay, "%Y-%m-%d")
+                # 5:30 to 9:30 am Weekdays EastBound
+                # 3:00 to 7:00 pm Weekdays Westbound
+                if (Dir == "rbEast"):
+                    self.timestamp = self.day + datetime.timedelta(hours=5, minutes=30)
+                    self.stoptime = self.day + datetime.timedelta(hours=9, minutes=30)
+                else: # rbWest
+                    self.timestamp = self.day + datetime.timedelta(hours=3, minutes=00)
+                    self.stoptime = self.day + datetime.timedelta(hours=7, minutes=00)
+            except ValueError:
+                self.log("Unable to parse day {} as form %Y-%m-%d".format(fullDay))
+                raise
+
+        else:
+            now = datetime.datetime.now()
+            self.day = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            self.timestamp = now
+            self.stoptime = now
+            if (now >= self.day + datetime.timedelta(hours=5, minutes=30) and now <= self.day + datetime.timedelta(hours=9, minutes=30)):
+                self.Dir = 'rbEast'
+            else:
+                self.Dir = 'rbWest'
+
 
     def parse(self, response):
         # Read the initial page
@@ -38,34 +73,35 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
 
         # Set direction "Dir", rbEast (morning) or rbWest (afternoon)
 
+        Dir = self.Dir
         #for dir in ['rbEast', 'rbWest'];
-        for Dir in ['rbWest']:
+        #for Dir in ['rbWest', 'rbEast']:
 
-            # Capture Dir in meta for downstream conditionals
-            meta = {
-                "Dir": Dir
-            }
+        # Capture Dir in meta for downstream conditionals
+        meta = {
+            "Dir": Dir
+        }
 
-            # POST Dir Selection
-            r = scrapy.FormRequest.from_response(
-                response,
-                formdata={
-                    'sm1': 'sm1|btnDirUpdate',
-                    'Dir': Dir,
-                    'txtRunRefresh': '',
-                    "__ASYNCPOST": "true",  # I think this is important?
-                    'btnDirUpdate': '',
-                    #'datepicker': '12/04/2017',
-                    #'timepicker': '7:30am',
-                    #'ddlExitAfterSel': '16',
-                    #'ddlEntryInterch': '5',
-                    #'ddlExitInterch': '16',
-                    },
-                callback=self.parse_eb,
-                meta=meta
-            )
+        # POST Dir Selection
+        r = scrapy.FormRequest.from_response(
+            response,
+            formdata={
+                'sm1': 'sm1|btnDirUpdate',
+                'Dir': Dir,
+                'txtRunRefresh': '',
+                "__ASYNCPOST": "true",  # I think this is important?
+                'btnDirUpdate': '',
+                #'datepicker': '12/04/2017',
+                #'timepicker': '7:30am',
+                #'ddlExitAfterSel': '16',
+                #'ddlEntryInterch': '5',
+                #'ddlExitInterch': '16',
+                },
+            callback=self.parse_eb,
+            meta=meta
+        )
 
-            yield r
+        yield r
 
         # self.log('DOES THIS SHOW UP?')
         #
@@ -160,20 +196,25 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
 
             ddlExitInterch = value
             ddlExitAfterSel = "16"
-            if meta["Dir"] == "rbWest":
-                ddlExitAfterSel = '4'
 
             # 5:30 to 9:30 am Weekdays EastBound
             # 3:00 to 7:00 pm Weekdays Westbound
-            day = datetime.datetime(2017, 12, 4)
+            #day = datetime.datetime(2017, 12, 4)
             stepinc = datetime.timedelta(minutes=30)
-            timestamp = day + datetime.timedelta(hours=16, minutes=30)
-            stoptime = day + datetime.timedelta(hours=17, minutes=00)
+            #timestamp = day + datetime.timedelta(hours=7, minutes=30)
+            #stoptime = day + datetime.timedelta(hours=8, minutes=00)
+            day = self.day
+            timestamp = self.timestamp
+            stoptime = self.stoptime
+            if meta["Dir"] == "rbWest":
+                ddlExitAfterSel = '4'
+                #timestamp = day + datetime.timedelta(hours=16, minutes=30)
+                #stoptime = day + datetime.timedelta(hours=17, minutes=00)
 
             while (timestamp <= stoptime):
 
-                datepicker = timestamp.strftime("%m/%d/%Y")
-                timepicker = timestamp.strftime("%-I : %M %p")
+                datepicker = self.timestamp.strftime("%m/%d/%Y")
+                timepicker = self.timestamp.strftime("%-I : %M %p")
 
                 # Build the post body
                 post_body = {
@@ -212,7 +253,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
 
                 yield r
 
-                timestamp += stepinc
+                timestamp += self.stepinc
 
 
     def parse_last(self, response):
