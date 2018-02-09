@@ -11,10 +11,11 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
     name = 'vai66tolls-spider'
     allowed_domains = ['vai66tolls.com']
     start_urls = ['http://vai66tolls.com/']
-    #stepinc = datetime.timedelta(minutes=5)
 
     def __init__(self, fullDay=None,  Dir=None, *args, **kwargs):
         super(Vai66tollsSpiderSpider, self).__init__(*args, **kwargs)
+
+        self.stepinc = datetime.timedelta(minutes=30)
 
         if (fullDay is not None and Dir is not None):
             self.log("fullDay={}".format(fullDay))
@@ -36,8 +37,8 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
                     self.timestamp = self.day + datetime.timedelta(hours=5, minutes=30)
                     self.stoptime = self.day + datetime.timedelta(hours=9, minutes=30)
                 else: # rbWest
-                    self.timestamp = self.day + datetime.timedelta(hours=3, minutes=00)
-                    self.stoptime = self.day + datetime.timedelta(hours=7, minutes=00)
+                    self.timestamp = self.day + datetime.timedelta(hours=12+3, minutes=00)
+                    self.stoptime = self.day + datetime.timedelta(hours=12+7, minutes=00)
             except ValueError:
                 self.log("Unable to parse day {} as form %Y-%m-%d".format(fullDay))
                 raise
@@ -200,12 +201,14 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
             # 5:30 to 9:30 am Weekdays EastBound
             # 3:00 to 7:00 pm Weekdays Westbound
             #day = datetime.datetime(2017, 12, 4)
-            stepinc = datetime.timedelta(minutes=30)
+            day = self.day
+            #stepinc = datetime.timedelta(minutes=30)
             #timestamp = day + datetime.timedelta(hours=7, minutes=30)
             #stoptime = day + datetime.timedelta(hours=8, minutes=00)
-            day = self.day
+
             timestamp = self.timestamp
             stoptime = self.stoptime
+
             if meta["Dir"] == "rbWest":
                 ddlExitAfterSel = '4'
                 #timestamp = day + datetime.timedelta(hours=16, minutes=30)
@@ -213,8 +216,8 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
 
             while (timestamp <= stoptime):
 
-                datepicker = self.timestamp.strftime("%m/%d/%Y")
-                timepicker = self.timestamp.strftime("%-I : %M %p")
+                datepicker = timestamp.strftime("%m/%d/%Y")
+                timepicker = timestamp.strftime("%-I : %M %p")
 
                 # Build the post body
                 post_body = {
