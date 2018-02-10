@@ -216,8 +216,15 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
 
             while (timestamp <= stoptime):
 
+                # if it's an "edge" (9:30am or 7:00pm)
+                # substract 1 minute so we don't get a $0 response
+                if (timestamp.time() == datetime.time(9,30) or timestamp.time() == datetime.time(19,0)):
+                    timestamp -= datetime.timedelta(minutes=1)
+
                 datepicker = timestamp.strftime("%m/%d/%Y")
                 timepicker = timestamp.strftime("%-I : %M %p")
+
+
 
                 # Build the post body
                 post_body = {
