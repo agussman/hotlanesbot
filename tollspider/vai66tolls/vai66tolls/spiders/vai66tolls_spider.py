@@ -245,7 +245,8 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
                     'ddlExitInterch': ddlExitInterch,
                     "ddlExitAfterSel": ddlExitAfterSel,
                     "ddlEntryInterch": ddlEntryInterch,
-                    "timestamp": "{} + {}".format(datepicker, timepicker)
+                    "timestamp": timestamp,
+                    "timestring": "{} + {}".format(datepicker, timepicker)
                 })
 
                 post_body = self.update_post_body_with_asp_vars(response, post_body)
@@ -278,13 +279,17 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
 
         meta = response.meta
 
+        # Some of the odd names here are to match the other collector
+        od = "{}-{}".format(meta["ddlEntryInterch"], meta["ddlExitInterch"])
         retval = {
-            "timestamp": meta["timestamp"],
+            "od": od,
+            "dt": meta["timestamp"],
             "ddlEntryInterch": meta["ddlEntryInterch"],
             "ddlExitInterch": meta["ddlExitInterch"],
-            "ddlExitAfterSel": meta["ddlExitAfterSel"],
-            "toll": toll_amount.replace("$", ""),
-            "Dir": meta["Dir"]
+            #"ddlExitAfterSel": meta["ddlExitAfterSel"],
+            "rate": toll_amount.replace("$", ""),
+            "direction": meta["Dir"],
+            "road": "66"
         }
 
         yield retval
