@@ -21,7 +21,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         self.table = self.ddb.Table("Rates-i66")
 
         # Query increment for historical pulls
-        self.stepinc = datetime.timedelta(minutes=30)
+        self.stepinc = datetime.timedelta(minutes=5)
 
         if (fullDay is not None and Dir is not None):
             self.log("fullDay={}".format(fullDay))
@@ -142,7 +142,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         #entry_points = response.xpath("//*[@id='ddlEntryInterch']/option/@value").extract()
         #entry_points = response.xpath("//*[@id='ddlEntryInterch']/option/text()").extract()
         entry_points = response.xpath("//*[@id='ddlEntryInterch']/option")
-        for ep in entry_points[0:5]:
+        for ep in entry_points:
             value = ep.xpath('@value').extract()[0]
             text = ep.xpath('text()').extract()[0]
             if text == 'Select Location':
@@ -194,7 +194,7 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         ddlEntryInterch = meta["ddlEntryInterch"]
 
         exit_points = response.xpath("//*[@id='ddlExitInterch']/option")
-        for ep in exit_points[0:5]:
+        for ep in exit_points:
             value = ep.xpath('@value').extract()[0]
             text = ep.xpath('text()').extract()[0]
             if text == 'Select Location':
