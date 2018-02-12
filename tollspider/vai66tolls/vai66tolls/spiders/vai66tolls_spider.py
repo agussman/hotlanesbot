@@ -4,6 +4,7 @@ from scrapy import Request, FormRequest
 from itertools import izip_longest # used by grouper
 import json
 import datetime
+import boto3
 
 OUTDIR="./log/"
 
@@ -15,6 +16,11 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
     def __init__(self, fullDay=None,  Dir=None, *args, **kwargs):
         super(Vai66tollsSpiderSpider, self).__init__(*args, **kwargs)
 
+        # Connection to DynamoDB
+        self.ddb = boto3.resource(service_name='dynamodb')
+        self.table = self.ddb.Table("Rates-i66")
+
+        # Query increment for historical pulls
         self.stepinc = datetime.timedelta(minutes=30)
 
         if (fullDay is not None and Dir is not None):
@@ -292,7 +298,16 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
             "road": "66"
         }
 
+        self.send_to_dynamo(retval)
+
         yield retval
+
+    def send_to_dynamo(self, rate):
+        #print "..."
+        # DynamoDB wants timestamps as Strings (we're dropping the milliseconds)
+        rate["dt"] = rate["dt"].isoformat(' ').split(".")[0]
+        response = self.table.put_item(Item=rate)
+        print(response)
 
 
 
