@@ -278,7 +278,7 @@ In the response, the relevant portion is:
 This is an ASP.net page and maintaining VIEWSTATE, cookies, etc is beyond the ken of requests. We're going to switch to `scrapy`.
 Good reference: https://blog.scrapinghub.com/2016/04/20/scrapy-tips-from-the-pros-april-2016-edition/
 
-`$ pip install scrapy`
+`$ pip install scrapy boto3`
 
 Using 1.5.0 for this.
 
@@ -340,6 +340,8 @@ LENGTH|TYPE|ID|CONTENT
 ```
 Function `extract_asp_vars` processes these response objects and returns the ASP.NET variables we care about (e.g., `__VIEWSTATE`).
 
+
+If you store `rate` as a String instead of an Integer, you're going to have a bad time. Because `'.'` lexically sorts after `'0'`, which means `5.50 > 40`.
 
 
 # This seems useful, says Scrapy currently broken, using Requests instead?
