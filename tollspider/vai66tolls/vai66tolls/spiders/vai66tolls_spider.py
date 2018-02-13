@@ -63,8 +63,8 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
     def parse(self, response):
         # Read the initial page
         # This function doesn't really do anything other than submit the form the first time
-        self.log('calling parse')
-        self.log_response(response, "parse")
+        #self.log('calling parse')
+        #self.log_response(response, "parse")
 
         # Parse Eastbound
         r = scrapy.FormRequest.from_response(
@@ -75,8 +75,8 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
         yield r
 
     def parse_form(self, response):
-        self.log('calling parse_form')
-        self.log_response(response, "parse_form")
+        #self.log('calling parse_form')
+        #self.log_response(response, "parse_form")
 
         # Set direction "Dir", rbEast (morning) or rbWest (afternoon)
 
@@ -132,8 +132,8 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
 
 
     def parse_eb(self, response):
-        self.log('calling parse_eb')
-        self.log_response(response, "eb")
+        #self.log('calling parse_eb')
+        #self.log_response(response, "eb")
 
         # Retrieve passed variables
         meta = response.meta
@@ -186,8 +186,8 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
 
 
     def parse_eb_entry(self, response):
-        self.log('calling parse_eb_entry')
-        self.log_response(response, "eb_entry")
+        #self.log('calling parse_eb_entry')
+        #self.log_response(response, "eb_entry")
 
         meta = response.meta
 
@@ -274,8 +274,8 @@ class Vai66tollsSpiderSpider(scrapy.Spider):
 
 
     def parse_last(self, response):
-        self.log('calling last')
-        self.log_response(response, "last")
+        #self.log('calling last')
+        #self.log_response(response, "last")
 
         toll_object = response.xpath("//*[@id='spanTollAmt']/text()").extract()
         # Return 0 if we didn't get a result (note: this shouldn't happen!)
