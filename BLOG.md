@@ -343,6 +343,17 @@ Function `extract_asp_vars` processes these response objects and returns the ASP
 
 If you store `rate` as a String instead of an Integer, you're going to have a bad time. Because `'.'` lexically sorts after `'0'`, which means `5.50 > 40`.
 
+# Front End
+
+Going w/ Angular 5.
+
+(needed to `$ brew upgrade node` under OSX)
+
+uggh, this isn't working because of a `icu4c` dependency. It's getting that from sourceforge, which is throwing an SHA256 error, which is CRAZY SKETCHY
+
+
+
+# References
 
 # This seems useful, says Scrapy currently broken, using Requests instead?
 https://github.com/rmadhok/scrapy-crawl-asp
@@ -361,6 +372,11 @@ http://toddhayton.com/2015/05/04/scraping-aspnet-pages-with-ajax-pagination/
 
 # Scrapy and DynamoDB on AWS
 http://neuralfoundry.com/scrapy-and-dynamodb-on-aws/
+
+# Using Amazon API Gateway as a proxy for DynamoDB
+https://aws.amazon.com/blogs/compute/using-amazon-api-gateway-as-a-proxy-for-dynamodb/
+
+# 
 
 ElasticCache - in-memory data store
 * Redis
