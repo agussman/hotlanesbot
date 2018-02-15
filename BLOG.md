@@ -349,7 +349,11 @@ Going w/ Angular 5.
 
 (needed to `$ brew upgrade node` under OSX)
 
-uggh, this isn't working because of a `icu4c` dependency. It's getting that from sourceforge, which is throwing an SHA256 error, which is CRAZY SKETCHY
+Install the Angular CLI
+`$ npm install -g @angular/cli`
+
+`$ ng new hotlanesbot-ng5`
+
 
 
 
@@ -376,7 +380,9 @@ http://neuralfoundry.com/scrapy-and-dynamodb-on-aws/
 # Using Amazon API Gateway as a proxy for DynamoDB
 https://aws.amazon.com/blogs/compute/using-amazon-api-gateway-as-a-proxy-for-dynamodb/
 
-# 
+# Angular 5 tutorial
+https://angular.io/tutorial/toh-pt0
+
 
 ElasticCache - in-memory data store
 * Redis
