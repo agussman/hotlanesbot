@@ -354,6 +354,46 @@ Install the Angular CLI
 
 `$ ng new hotlanesbot-ng5`
 
+# Leaflet
+
+# this seems helpful: https://www.asymmetrik.com/ngx-leaflet-tutorial-angular-cli/
+
+npm install leaflet
+npm install @asymmetrik/ngx-leaflet
+npm install --save-dev @types/leaflet
+
+Added to style.css:
+@import "leaflet/dist/leaflet.css";
+
+Added to app.component.html:
+<div style="height: 300px;"
+     leaflet
+     [leafletOptions]="options">
+</div>
+
+Added to app.module.ts:
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+and
+    LeafletModule.forRoot()
+    
+to app.component.ts:
+import { latLng, tileLayer } from 'leaflet';
+
+and
+
+
+  options = {
+    layers: [
+      tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        detectRetina: true
+      })
+    ],
+    zoom: 7,
+    center: latLng([ 46.879966, -121.726909 ])
+  };
+
 
 
 
