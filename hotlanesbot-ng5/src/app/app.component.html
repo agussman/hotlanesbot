@@ -1,7 +1,7 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <mat-toolbar color="primary">
   <mat-toolbar-row>
-    <span>This is a toolbar</span>
+    <span>{{ title }}</span>
 
     <button mat-button>About</button>
     <button mat-button>Services</button>
@@ -30,7 +30,12 @@
 
 <button mat-button>My Button</button>
 
-<div style="height: 300px;"
+<div style="height: 500px;"
      leaflet
      [leafletOptions]="options">
 </div>
+
+<mat-drawer-container>
+  <mat-drawer mode="side" opened="true">Drawer content</mat-drawer>
+  <mat-drawer-content>Main content</mat-drawer-content>
+</mat-drawer-container>

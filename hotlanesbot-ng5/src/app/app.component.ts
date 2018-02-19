@@ -17,8 +17,15 @@ export class AppComponent {
         detectRetina: true
       })
     ],
-    zoom: 7,
-    center: latLng([ 46.879966, -121.726909 ])
+    zoom: 12,
+    center: latLng([ 38.8427869, -77.2375653 ])
   };
 
 }
+
+@Component({
+  selector: 'sidenav-drawer-overview-example',
+  templateUrl: 'sidenav-drawer-overview-example.html',
+  styleUrls: ['sidenav-drawer-overview-example.css'],
+})
+export class SidenavDrawerOverviewExample {}
