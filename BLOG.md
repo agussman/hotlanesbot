@@ -396,6 +396,14 @@ and
 
 
 
+Ran into some wierdness (`Error: More than one module matches.`) trying to generate a component, had to add `--module app`
+```
+$ pwd
+/Users/agussman/Documents/495HotLanes/hotlanesbot-ng5
+hotlanesbot-ng5 $ ng generate component sidenav-drawer-overview --module app
+```
+
+
 
 # References
 

@@ -6,10 +6,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
 
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { SidenavDrawerOverviewComponent } from './sidenav-drawer-overview/sidenav-drawer-overview.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SidenavDrawerOverviewComponent
   ],
   imports: [
     BrowserModule,
