@@ -402,6 +402,17 @@ $ pwd
 /Users/agussman/Documents/495HotLanes/hotlanesbot-ng5
 hotlanesbot-ng5 $ ng generate component sidenav-drawer-overview --module app
 ```
+Actually, didn't need to generate a component for that! I had the imports messed up.
+
+Create a toll data servce:
+```
+hotlanesbot-ng5 $ ng generate service toll-data
+  create src/app/toll-data.service.spec.ts (387 bytes)
+  create src/app/toll-data.service.ts (114 bytes)
+```
+
+
+
 
 
 
