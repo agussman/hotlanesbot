@@ -8,6 +8,8 @@ import { MaterialModule } from './material.module';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { SidenavDrawerOverviewComponent } from './sidenav-drawer-overview/sidenav-drawer-overview.component';
 
+import { TollDataService } from './toll-data.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -19,7 +21,9 @@ import { SidenavDrawerOverviewComponent } from './sidenav-drawer-overview/sidena
     MaterialModule,
     LeafletModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    TollDataService
+  ],
   bootstrap: [AppComponent]
 })
 
