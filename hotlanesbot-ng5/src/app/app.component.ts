@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { latLng, tileLayer } from 'leaflet';
+import { TollDataService } from './toll-data.service';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +9,22 @@ import { latLng, tileLayer } from 'leaflet';
 })
 export class AppComponent {
   title = 'Hot Lanes Bot';
+
+  constructor( private tollDataService: TollDataService ) { }
+
+  ngOnInit() {
+    console.log("This is a message.");
+    this.getTollStuff();
+    this.getTollDataServiceStuff();
+  }
+
+  getTollStuff(): void {
+    console.log("doing tollStuff");
+  }
+
+  getTollDataServiceStuff(): void {
+    console.log( this.tollDataService.get95pins() );
+  }
 
   options = {
     layers: [
