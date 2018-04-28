@@ -313,6 +313,20 @@ then:
 `(hotlanesbot)tollspider $ cd vai66tolls/`
 `(hotlanesbot)vai66tolls $ scrapy genspider vai66tolls-spider vai66tolls.com`
 
+Running the scraper over historical data requires putting in a date and a direction:
+`(hotlanesbot)vai66tolls $ scrapy crawl vai66tolls-spider -a fullDay=2018-02-01 -a Dir=rbEast > /tmp/crawl.out 2> /tmp/crawl.err`
+
+We can do a bunch at once with:
+```
+$ START_DATE=2018-02-02
+$ NDAYS=84
+$ for i in $(seq 0 $NDAYS); do 
+  fullDay=$(date -v+${i}d -ujf"%Y-%m-%d" $START_DATE +%Y-%m-%d);
+  scrapy crawl vai66tolls-spider -a fullDay=$fullDay -a Dir=rbEast;
+  scrapy crawl vai66tolls-spider -a fullDay=$fullDay -a Dir=rbWest;
+done
+```
+
 # Some HARD learned lessons here:
 
 You need to submit the form first before you get your first cookie (ASP.NET_SessionId=gobledegook).
