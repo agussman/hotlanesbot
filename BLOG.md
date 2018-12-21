@@ -1,5 +1,26 @@
 # Background
 
+
+
+
+
+# Refactor
+
+We have a couple of goals here:
+
+1) Get data again
+2) Use Chalice for the Lambda function
+3) Probably use a new DynamoDB database for the data so we get $ as a numeric instead of a string.
+
+## What are on ramps and off ramps?
+
+Querying https://www.expresslanes.com/map-your-trip in the Network Viewer we see:
+
+https://www.expresslanes.com/themes/custom/transurbangroup/js/on-the-road/entry_exit.js?v=1.x
+
+This contains a .json object with useful info.
+
+
 # Research
 Current Toll data is available from https://www.expresslanes.com/on-the-road
 
@@ -318,8 +339,8 @@ Running the scraper over historical data requires putting in a date and a direct
 
 We can do a bunch at once with:
 ```
-$ START_DATE=2018-02-02
-$ NDAYS=84
+$ START_DATE=2018-02-03
+$ NDAYS=83
 $ for i in $(seq 0 $NDAYS); do 
   fullDay=$(date -v+${i}d -ujf"%Y-%m-%d" $START_DATE +%Y-%m-%d);
   scrapy crawl vai66tolls-spider -a fullDay=$fullDay -a Dir=rbEast;
