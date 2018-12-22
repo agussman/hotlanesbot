@@ -20,6 +20,34 @@ https://www.expresslanes.com/themes/custom/transurbangroup/js/on-the-road/entry_
 
 This contains a .json object with useful info.
 
+This appears to have changed slightly:
+
+```
+495HotLanes $ grep -o -E '"id": "....."' /tmp/entry_exit.js  | sort | uniq | wc
+      68     136     952
+495HotLanes $ grep -o -E '"id": "....."' data/  | sort | uniq | wc
+entry_exit.json  ods.txt
+495HotLanes $ grep -o -E '"id": "....."' data/entry_exit.json  | sort | uniq | wc
+      67     134     938
+495HotLanes $ grep -o -E '"id": "....."' /tmp/entry_exit.js  | sort | uniq > /tmp/new
+495HotLanes $ grep -o -E '"id": "....."' data/entry_exit.json  | sort | uniq > /tmp/old
+495HotLanes $ diff /tmp/new /tmp/old
+31a32
+> "id": "201SD"
+67,68d67
+< "id": "221NO"
+< "id": "221SD"
+```
+
+201SD: "I-395 N Near Duke Street/Route 236"
+
+221NO: "I-95 Near Courthouse Road/Route 630"
+221SD: "I-95 Near Courthouse Road/Route 630"
+
+
+
+
+
 
 # Research
 Current Toll data is available from https://www.expresslanes.com/on-the-road
