@@ -476,69 +476,69 @@
                     {
                         "id": "181ND",
                         "ods": [
-                            "1140",
+                            "1142",
                             "1092"
                         ]
                     },
                     {
                         "id": "182ND",
                         "ods": [
-                            "1140",
+                            "1142",
                             "1091"
                         ]
                     },
                     {
                         "id": "183ND",
                         "ods": [
-                            "1140",
+                            "1142",
                             "1090"
                         ]
                     },
                     {
                         "id": "185ND",
                         "ods": [
-                            "1140",
+                            "1142",
                             "1089"
                         ]
                     },
                     {
                         "id": "186ND",
                         "ods": [
-                            "1140",
+                            "1142",
                             "1088"
                         ]
                     },
                     {
                         "id": "187ND",
                         "ods": [
-                            "1140",
+                            "1142",
                             "1087"
                         ]
                     },
                     {
                         "id": "188ND",
                         "ods": [
-                            "1140",
+                            "1142",
                             "1086"
                         ]
                     },
                     {
                         "id": "191ND",
                         "ods": [
-                            "1140",
+                            "1142",
                             "1085"
                         ]
                     },
                     {
                         "id": "201ND",
                         "ods": [
-                            "1141"
+                            "1143"
                         ]
                     },
                     {
                         "id": "202ND",
                         "ods": [
-                            "1140"
+                            "1142"
                         ]
                     }
                 ],
@@ -1475,6 +1475,115 @@
                 "latitude": "38.4831068808732440",
                 "longitude": "-77.3942720890045200",
                 "path": "95"
+            },
+            "221NO": {
+                "details": {
+                    "description": [
+                        "Traveling north on I-95, you can enter the northbound Express Lanes before Garrisonville Road."
+                    ],
+                    "image": "/images/accessing/maps/NorthboundEntry-1-2.png",
+                    "title": "I-95 near Courthouse Road/Route 630 to 95 Express Lanes"
+                },
+                "exits": [
+                    {
+                        "id": "181ND",
+                        "ods": [
+                            "1098",
+                            "1092"
+                        ]
+                    },
+                    {
+                        "id": "182ND",
+                        "ods": [
+                            "1098",
+                            "1091"
+                        ]
+                    },
+                    {
+                        "id": "183ND",
+                        "ods": [
+                            "1098",
+                            "1090"
+                        ]
+                    },
+                    {
+                        "id": "185ND",
+                        "ods": [
+                            "1098",
+                            "1089"
+                        ]
+                    },
+                    {
+                        "id": "186ND",
+                        "ods": [
+                            "1098",
+                            "1088"
+                        ]
+                    },
+                    {
+                        "id": "187ND",
+                        "ods": [
+                            "1098",
+                            "1087"
+                        ]
+                    },
+                    {
+                        "id": "188ND",
+                        "ods": [
+                            "1098",
+                            "1086"
+                        ]
+                    },
+                    {
+                        "id": "191ND",
+                        "ods": [
+                            "1098",
+                            "1085"
+                        ]
+                    },
+                    {
+                        "id": "201ND",
+                        "ods": [
+                            "1099"
+                        ]
+                    },
+                    {
+                        "id": "202ND",
+                        "ods": [
+                            "1098"
+                        ]
+                    },
+                    {
+                        "id": "206ND",
+                        "ods": [
+                            "1097"
+                        ]
+                    },
+                    {
+                        "id": "207ND",
+                        "ods": [
+                            "1096"
+                        ]
+                    },
+                    {
+                        "id": "208ND",
+                        "ods": [
+                            "1095"
+                        ]
+                    },
+                    {
+                        "id": "211ND",
+                        "ods": [
+                            "1094"
+                        ]
+                    }
+                ],
+                "id": "221NO",
+                "index": "0",
+                "label": "I-95 Near Courthouse Road/Route 630",
+                "latitude": "38.452553",
+                "longitude": "-77.407403",
+                "path": "95"
             }
         },
         "exits": {
@@ -1757,13 +1866,6 @@
                         ]
                     },
                     {
-                        "id": "201SD",
-                        "ods": [
-                            "1040",
-                            "1146"
-                        ]
-                    },
-                    {
                         "id": "203SD",
                         "ods": [
                             "1040",
@@ -1828,6 +1930,13 @@
                     },
                     {
                         "id": "220SD",
+                        "ods": [
+                            "1040",
+                            "1167"
+                        ]
+                    },
+                    {
+                        "id": "221SD",
                         "ods": [
                             "1040",
                             "1167"
@@ -1888,13 +1997,6 @@
                         ]
                     },
                     {
-                        "id": "201SD",
-                        "ods": [
-                            "1048",
-                            "1146"
-                        ]
-                    },
-                    {
                         "id": "203SD",
                         "ods": [
                             "1048",
@@ -1959,6 +2061,13 @@
                     },
                     {
                         "id": "220SD",
+                        "ods": [
+                            "1048",
+                            "1167"
+                        ]
+                    },
+                    {
+                        "id": "221SD",
                         "ods": [
                             "1048",
                             "1167"
@@ -2019,13 +2128,6 @@
                         ]
                     },
                     {
-                        "id": "201SD",
-                        "ods": [
-                            "1055",
-                            "1146"
-                        ]
-                    },
-                    {
                         "id": "203SD",
                         "ods": [
                             "1055",
@@ -2090,6 +2192,13 @@
                     },
                     {
                         "id": "220SD",
+                        "ods": [
+                            "1055",
+                            "1167"
+                        ]
+                    },
+                    {
+                        "id": "221SD",
                         "ods": [
                             "1055",
                             "1167"
@@ -2144,13 +2253,6 @@
                         ]
                     },
                     {
-                        "id": "201SD",
-                        "ods": [
-                            "1062",
-                            "1146"
-                        ]
-                    },
-                    {
                         "id": "203SD",
                         "ods": [
                             "1062",
@@ -2215,6 +2317,13 @@
                     },
                     {
                         "id": "220SD",
+                        "ods": [
+                            "1062",
+                            "1167"
+                        ]
+                    },
+                    {
+                        "id": "221SD",
                         "ods": [
                             "1062",
                             "1167"
@@ -2269,13 +2378,6 @@
                         ]
                     },
                     {
-                        "id": "201SD",
-                        "ods": [
-                            "1068",
-                            "1146"
-                        ]
-                    },
-                    {
                         "id": "203SD",
                         "ods": [
                             "1068",
@@ -2340,6 +2442,13 @@
                     },
                     {
                         "id": "220SD",
+                        "ods": [
+                            "1068",
+                            "1167"
+                        ]
+                    },
+                    {
+                        "id": "221SD",
                         "ods": [
                             "1068",
                             "1167"
@@ -2390,13 +2499,6 @@
                         ]
                     },
                     {
-                        "id": "201SD",
-                        "ods": [
-                            "1074",
-                            "1146"
-                        ]
-                    },
-                    {
                         "id": "203SD",
                         "ods": [
                             "1074",
@@ -2465,6 +2567,13 @@
                             "1074",
                             "1167"
                         ]
+                    },
+                    {
+                        "id": "221SD",
+                        "ods": [
+                            "1074",
+                            "1167"
+                        ]
                     }
                 ],
                 "id": "187SO",
@@ -2506,13 +2615,6 @@
                         "id": "192SD",
                         "ods": [
                             "1079"
-                        ]
-                    },
-                    {
-                        "id": "201SD",
-                        "ods": [
-                            "1079",
-                            "1146"
                         ]
                     },
                     {
@@ -2580,6 +2682,13 @@
                     },
                     {
                         "id": "220SD",
+                        "ods": [
+                            "1079",
+                            "1167"
+                        ]
+                    },
+                    {
+                        "id": "221SD",
                         "ods": [
                             "1079",
                             "1167"
@@ -2670,6 +2779,12 @@
                         "ods": [
                             "1157"
                         ]
+                    },
+                    {
+                        "id": "221SD",
+                        "ods": [
+                            "1157"
+                        ]
                     }
                 ],
                 "id": "200SO",
@@ -2747,6 +2862,12 @@
                         "ods": [
                             "1167"
                         ]
+                    },
+                    {
+                        "id": "221SD",
+                        "ods": [
+                            "1167"
+                        ]
                     }
                 ],
                 "id": "202SO",
@@ -2766,45 +2887,15 @@
                 },
                 "exits": [
                     {
-                        "id": "210SD",
-                        "ods": [
-                            "1175"
-                        ]
-                    },
-                    {
-                        "id": "211SD",
-                        "ods": [
-                            "1176"
-                        ]
-                    },
-                    {
-                        "id": "213SD",
-                        "ods": [
-                            "1177"
-                        ]
-                    },
-                    {
-                        "id": "215SD",
-                        "ods": [
-                            "1178"
-                        ]
-                    },
-                    {
-                        "id": "217SD",
-                        "ods": [
-                            "1179"
-                        ]
-                    },
-                    {
-                        "id": "218SD",
-                        "ods": [
-                            "1180"
-                        ]
-                    },
-                    {
                         "id": "220SD",
                         "ods": [
-                            "1181"
+                            "1174"
+                        ]
+                    },
+                    {
+                        "id": "221SD",
+                        "ods": [
+                            "1174"
                         ]
                     }
                 ],
@@ -2858,12 +2949,6 @@
                         "id": "218SD",
                         "ods": [
                             "1173"
-                        ]
-                    },
-                    {
-                        "id": "220SD",
-                        "ods": [
-                            "1174"
                         ]
                     }
                 ],
@@ -2921,6 +3006,12 @@
                     },
                     {
                         "id": "220SD",
+                        "ods": [
+                            "1181"
+                        ]
+                    },
+                    {
+                        "id": "221SD",
                         "ods": [
                             "1181"
                         ]
@@ -2983,6 +3074,12 @@
                         "ods": [
                             "1188"
                         ]
+                    },
+                    {
+                        "id": "221SD",
+                        "ods": [
+                            "1188"
+                        ]
                     }
                 ],
                 "id": "208SO",
@@ -3036,6 +3133,12 @@
                         "ods": [
                             "1194"
                         ]
+                    },
+                    {
+                        "id": "221SD",
+                        "ods": [
+                            "1194"
+                        ]
                     }
                 ],
                 "id": "209SO",
@@ -3068,6 +3171,12 @@
                     },
                     {
                         "id": "220SD",
+                        "ods": [
+                            "1197"
+                        ]
+                    },
+                    {
+                        "id": "221SD",
                         "ods": [
                             "1197"
                         ]
@@ -3194,23 +3303,6 @@
                 "latitude": "38.7898798205903400",
                 "longitude": "-77.1720827434112400",
                 "path": "495South"
-            },
-            "201SD": {
-                "details": {
-                    "description": [
-                        "This is the last exit for all northbound Express Lanes traffic before the start of the I-395 HOV lanes.\r",
-                        "\tAt the end of the northbound Express Lanes, vehicles that do not meet the HOV requirement when the HOV rules are in effect will need to exit from the Express Lanes and reenter the regular I-395 lanes after Edsall Road. If the HOV restrictions are not in effect, all Express Lanes traffic can continue into the HOV lanes.\r",
-                        "\tLearn more about the Express Lanes transition area."
-                    ],
-                    "image": "/images/accessing/maps/NorthboundExit-4-1.png",
-                    "title": "95 Express Lanes to I-395 N Near Duke Street/Route 236"
-                },
-                "id": "201SD",
-                "index": "182",
-                "label": "I-395 N Near Duke Street/Route 236",
-                "latitude": "38.8100183245773600",
-                "longitude": "-77.1513283252716000",
-                "path": "95"
             },
             "202SD": {
                 "details": {
@@ -3365,8 +3457,7 @@
             "220SD": {
                 "details": {
                     "description": [
-                        "Traveling southbound on the Express Lanes, you can exit onto I-95 just north of Garrisonville Road.\r",
-                        "\tThis is the last exit for all southbound Express Lanes traffic."
+                        "Traveling southbound on the Express Lanes, you can exit onto I-95 just north of Garrisonville Road.\r"
                     ],
                     "image": "/images/accessing/maps/SouthboundExit-1-1.png",
                     "title": "95 Express Lanes to I-95 near Garrisonville Road/Route 610"
@@ -3376,6 +3467,22 @@
                 "label": "I-95 Near Garrisonville Road/Route 610",
                 "latitude": "38.4831068808732440",
                 "longitude": "-77.3942720890045200",
+                "path": "95"
+            },
+            "221SD": {
+                "details": {
+                    "description": [
+                        "Traveling southbound on the Express Lanes, you can exit onto I-95 just after Garrisonville Road.\r",
+                        "\tThis is the last exit for all southbound Express Lanes traffic."
+                    ],
+                    "image": "/images/accessing/maps/SouthboundExit-1-2.png",
+                    "title": "95 Express Lanes to I-95 near Courthouse Road/Route 630"
+                },
+                "id": "221SD",
+                "index": "0",
+                "label": "I-95 Near Courthouse Road/Route 630",
+                "latitude": "38.452750",
+                "longitude": "-77.408712",
                 "path": "95"
             }
         }
