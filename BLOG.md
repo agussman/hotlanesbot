@@ -45,6 +45,12 @@ entry_exit.json  ods.txt
 221SD: "I-95 Near Courthouse Road/Route 630"
 
 
+# Rewriting to us Chalice
+
+$ mkvirtualenv expresslanes
+(expresslanes) $ pip install chalice
+(expresslanes) $ chalice new-project expresslanes
+
 
 
 
