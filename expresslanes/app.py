@@ -1,18 +1,28 @@
 from chalice import Chalice, Rate
 
+import requests
+
 app = Chalice(app_name='expresslanes')
 
+URL = "https://www.expresslanes.com/maps-api/get-ramps-price"
 
 # Automatically runs every 5 minutes
 # The function you decorate must accept a single argument, which will be of type CloudWatchEvent.
 @app.schedule(Rate(1, unit=Rate.MINUTES))
 def periodic_task(event):
-    print("Running...")
+    print("Periodic Running...")
     return {"hello": "world"}
 
 
 def get_ramps_price():
-    print("Running. 2..")
+    print("get_ramps_price()...")
+    payload = {
+        "ramp_entry": "217",
+        "ramp_exit": "191"
+    }
+    resp = requests.get(url=URL, params=payload)
+
+    print("{} {}".format(resp.status_code, resp.url))
 
 #fetch("https://www.expresslanes.com/maps-api/get-ramps-price?ramp_entry=217&ramp_exit=191", {"credentials":"include","headers":{"accept":"application/json, text/javascript, */*; q=0.01","accept-language":"en-US,en;q=0.9","cache-control":"no-cache","pragma":"no-cache","x-requested-with":"XMLHttpRequest"},"referrer":"https://www.expresslanes.com/map-your-trip","referrerPolicy":"no-referrer-when-downgrade","body":null,"method":"GET","mode":"cors"});
 
