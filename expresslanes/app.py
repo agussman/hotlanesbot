@@ -1,6 +1,7 @@
 from chalice import Chalice, Rate
 
 import requests
+import json
 
 app = Chalice(app_name='expresslanes')
 
@@ -23,6 +24,11 @@ def get_ramps_price():
     resp = requests.get(url=URL, params=payload)
 
     print("{} {}".format(resp.status_code, resp.url))
+
+    data = json.loads(resp.content)
+
+    print("Got response: {}".format(data))
+    
 
 #fetch("https://www.expresslanes.com/maps-api/get-ramps-price?ramp_entry=217&ramp_exit=191", {"credentials":"include","headers":{"accept":"application/json, text/javascript, */*; q=0.01","accept-language":"en-US,en;q=0.9","cache-control":"no-cache","pragma":"no-cache","x-requested-with":"XMLHttpRequest"},"referrer":"https://www.expresslanes.com/map-your-trip","referrerPolicy":"no-referrer-when-downgrade","body":null,"method":"GET","mode":"cors"});
 
