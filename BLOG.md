@@ -44,6 +44,8 @@ entry_exit.json  ods.txt
 221NO: "I-95 Near Courthouse Road/Route 630"
 221SD: "I-95 Near Courthouse Road/Route 630"
 
+Wrote a script `bin/extract_exit_ids.py` to pull out a usable json from the api endpoint output.
+
 
 # Rewriting to us Chalice
 
