@@ -7,6 +7,13 @@ app = Chalice(app_name='expresslanes')
 
 URL = "https://www.expresslanes.com/maps-api/get-ramps-price"
 
+ENTRY_EXIT_JSON = "./data/entry_exit.json"
+
+def load_entry_exits(json_file):
+    with open(json_file) as f:
+        return json.load(f)
+
+
 # Automatically runs every 5 minutes
 # The function you decorate must accept a single argument, which will be of type CloudWatchEvent.
 @app.schedule(Rate(1, unit=Rate.MINUTES))
@@ -32,6 +39,10 @@ def get_ramps_price():
 
 #fetch("https://www.expresslanes.com/maps-api/get-ramps-price?ramp_entry=217&ramp_exit=191", {"credentials":"include","headers":{"accept":"application/json, text/javascript, */*; q=0.01","accept-language":"en-US,en;q=0.9","cache-control":"no-cache","pragma":"no-cache","x-requested-with":"XMLHttpRequest"},"referrer":"https://www.expresslanes.com/map-your-trip","referrerPolicy":"no-referrer-when-downgrade","body":null,"method":"GET","mode":"cors"});
 
+
+entry_exits = load_entry_exits(ENTRY_EXIT_JSON)
+
+print(entry_exits)
 
 get_ramps_price()
 

@@ -45,6 +45,9 @@ entry_exit.json  ods.txt
 221SD: "I-95 Near Courthouse Road/Route 630"
 
 Wrote a script `bin/extract_exit_ids.py` to pull out a usable json from the api endpoint output.
+```
+$ python3 bin/extract_exit_ids.py > expresslanes/data/entry_exit.json
+```
 
 
 # Rewriting to us Chalice
