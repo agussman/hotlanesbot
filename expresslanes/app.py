@@ -22,11 +22,11 @@ def periodic_task(event):
     return {"hello": "world"}
 
 
-def get_ramps_price():
+def get_ramps_price(ramp_entry, ramp_exit):
     print("get_ramps_price()...")
     payload = {
-        "ramp_entry": "217",
-        "ramp_exit": "191"
+        "ramp_entry": ramp_entry,
+        "ramp_exit": ramp_exit
     }
     resp = requests.get(url=URL, params=payload)
 
@@ -42,9 +42,12 @@ def get_ramps_price():
 
 entry_exits = load_entry_exits(ENTRY_EXIT_JSON)
 
-print(entry_exits)
+#print(entry_exits)
 
-get_ramps_price()
+for entry, exits in entry_exits.items():
+    print(entry)
+    for outpoint in exits[:2]:
+        get_ramps_price(entry, outpoint)
 
 # @app.route('/')
 # def index():
