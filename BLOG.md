@@ -58,6 +58,7 @@ $ mkvirtualenv expresslanes
 
 
 
+[AWS Blog post about parallel processing in python on AWS Lambda](https://aws.amazon.com/blogs/compute/parallel-processing-in-python-with-aws-lambda/)
 
 
 # Research

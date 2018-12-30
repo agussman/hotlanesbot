@@ -3,6 +3,8 @@ from chalice import Chalice, Rate
 import requests
 import json
 
+import time
+
 app = Chalice(app_name='expresslanes')
 
 URL = "https://www.expresslanes.com/maps-api/get-ramps-price"
@@ -44,10 +46,18 @@ entry_exits = load_entry_exits(ENTRY_EXIT_JSON)
 
 #print(entry_exits)
 
+# Timing
+_start = time.time()
+
 for entry, exits in entry_exits.items():
     print(entry)
-    for outpoint in exits[:2]:
+    for outpoint in exits:
         get_ramps_price(entry, outpoint)
+
+
+_end = time.time()
+
+print("Execution time: {}".format(time.time() - _start))
 
 # @app.route('/')
 # def index():
