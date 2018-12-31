@@ -60,6 +60,9 @@ $ mkvirtualenv expresslanes
 
 [AWS Blog post about parallel processing in python on AWS Lambda](https://aws.amazon.com/blogs/compute/parallel-processing-in-python-with-aws-lambda/)
 
+Serial querying: Execution time: 1550.6641862392426
+
+
 
 # Research
 Current Toll data is available from https://www.expresslanes.com/on-the-road
