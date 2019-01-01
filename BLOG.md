@@ -61,6 +61,8 @@ $ mkvirtualenv expresslanes
 [AWS Blog post about parallel processing in python on AWS Lambda](https://aws.amazon.com/blogs/compute/parallel-processing-in-python-with-aws-lambda/)
 
 Serial querying: Execution time: 1550.6641862392426
+second time serial: 1552.0722210407257
+
 
 
 

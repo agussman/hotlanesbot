@@ -4,6 +4,7 @@ import requests
 import json
 
 import time
+from multiprocessing import Process, Pipe
 
 app = Chalice(app_name='expresslanes')
 
@@ -24,7 +25,7 @@ def periodic_task(event):
     return {"hello": "world"}
 
 
-def get_ramps_price(ramp_entry, ramp_exit):
+def get_ramps_price(ramp_entry, ramp_exit, conn):
     print("get_ramps_price()...")
     payload = {
         "ramp_entry": ramp_entry,
@@ -34,9 +35,12 @@ def get_ramps_price(ramp_entry, ramp_exit):
 
     print("{} {}".format(resp.status_code, resp.url))
 
-    data = json.loads(resp.content)
+    conn.send(resp.content)
+    conn.close()
 
-    print("Got response: {}".format(data))
+    #data = json.loads(resp.content)
+    
+    #print("Got response: {}".format(data))
     
 
 #fetch("https://www.expresslanes.com/maps-api/get-ramps-price?ramp_entry=217&ramp_exit=191", {"credentials":"include","headers":{"accept":"application/json, text/javascript, */*; q=0.01","accept-language":"en-US,en;q=0.9","cache-control":"no-cache","pragma":"no-cache","x-requested-with":"XMLHttpRequest"},"referrer":"https://www.expresslanes.com/map-your-trip","referrerPolicy":"no-referrer-when-downgrade","body":null,"method":"GET","mode":"cors"});
@@ -46,14 +50,40 @@ entry_exits = load_entry_exits(ENTRY_EXIT_JSON)
 
 #print(entry_exits)
 
+# create a list to keep all processes
+processes = []
+
+# create a list to keep connections
+parent_connections = []
+
+
 # Timing
 _start = time.time()
 
 for entry, exits in entry_exits.items():
     print(entry)
     for outpoint in exits:
-        get_ramps_price(entry, outpoint)
+        # create a pipe for communication
+        parent_conn, child_conn = Pipe()
+        parent_connections.append(parent_conn)
 
+        #get_ramps_price(entry, outpoint)
+        # create the process, pass instance and connection
+        process = Process(target=get_ramps_price, args=(entry, outpoint, child_conn,))
+        processes.append(process)
+
+
+# start all processes
+for process in processes:
+    process.start()
+
+# make sure that all processes have finished
+for process in processes:
+    process.join()
+
+for parent_connection in parent_connections:
+    data = json.loads(parent_connection.recv())    
+    print("Got response: {}".format(data))
 
 _end = time.time()
 
